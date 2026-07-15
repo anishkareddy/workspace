@@ -1386,6 +1386,45 @@ button.rd-hc{cursor:pointer}
 .c-deals{font-size:12px;color:var(--text-3);white-space:nowrap}
 .ot-grid{grid-template-columns:minmax(165px,1.3fr) minmax(145px,1.4fr) 134px 108px 100px 76px minmax(145px,1.1fr) 68px}
 @media(max-width:820px){ .ot-row.ot-grid .c-deals{display:none} }
+/* v9.2 radar polish */
+.rd-tools .select{width:auto;flex:none}
+.rd-round{min-width:0;overflow:hidden;text-overflow:ellipsis}
+/* v9.3 meetings table */
+.mt-grid{display:grid;grid-template-columns:86px minmax(140px,1fr) minmax(150px,1.2fr) minmax(150px,1.2fr) minmax(180px,1.6fr) 96px;gap:0 12px;align-items:center}
+.mt-deals{font-size:12px;color:var(--text-2);line-height:1.45;min-width:0}
+.mt-deals .r2{color:var(--text-4);font-size:11px}
+.mt-sum{font-size:12.5px;color:var(--text-2);line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+@media(max-width:900px){ .mt-grid{grid-template-columns:76px minmax(120px,1fr) minmax(150px,1.5fr) 88px} .mt-grid .mt-deals+.mt-deals, .mt-grid .mt-sum{display:none} }
+/* v9.2 reads (deep briefings) */
+.reads{display:flex;flex-direction:column;height:100%;min-height:0}
+.rds-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:14px}
+.rds-card{padding:15px 17px;cursor:pointer;min-width:0;position:relative}
+.rds-card .rc-top{display:flex;align-items:center;gap:7px}
+.rds-card .rc-dot{width:7px;height:7px;border-radius:999px;background:var(--accent);flex:none}
+.rds-card.is-read .rc-dot{background:var(--text-4);opacity:.4}
+.rds-card h3{font-size:14.5px;font-weight:650;letter-spacing:-.01em;color:var(--text-1);flex:1;min-width:0;line-height:1.35}
+.rds-card .rc-date{font-size:11px;color:var(--text-4);white-space:nowrap}
+.rds-card .rc-body{margin-top:7px;font-size:12.5px;line-height:1.55;color:var(--text-3);overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.rds-card .rc-meta{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;align-items:center}
+.rc-kind{display:inline-flex;padding:1px 8px;border-radius:999px;font-size:10.5px;font-weight:650;letter-spacing:.03em;text-transform:uppercase}
+.rc-kind.briefing{background:var(--jl-navy-bg);color:var(--jl-navy-text)}
+.rc-kind.deepdive{background:var(--jl-plum-bg);color:var(--jl-plum-text)}
+.rc-kind.friday{background:var(--jl-brass-bg);color:var(--jl-brass-text)}
+.rds-card .rc-pin{position:absolute;top:10px;right:10px;color:var(--accent-text);opacity:0;transition:opacity var(--dur-fast)}
+.rds-card.pinned .rc-pin{opacity:1}
+/* reading modal */
+.read-view{font-size:15.5px;line-height:1.7;color:var(--text-1);font-family:var(--font-serif)}
+.read-view h2{font-size:19px;font-weight:650;margin:22px 0 8px;font-family:var(--font-ui);letter-spacing:-.01em}
+.read-view h3{font-size:16px;font-weight:650;margin:18px 0 6px;font-family:var(--font-ui)}
+.read-view h4{font-size:14px;font-weight:650;margin:14px 0 5px;font-family:var(--font-ui)}
+.read-view p{margin:0 0 11px}
+.read-view ul,.read-view ol{margin:0 0 11px;padding-left:24px}
+.read-view li{margin:4px 0}
+.read-view a{color:var(--accent-text);text-decoration:underline;text-underline-offset:2px}
+.read-view hr{border:0;border-top:1px solid var(--border-hairline);margin:18px 0}
+.read-view b{font-weight:650}
+.modal.read-modal{max-width:760px}
+.read-modal .modal-body{padding-top:4px}
 </style>
 </head>
 <body>
@@ -1456,6 +1495,7 @@ button.rd-hc{cursor:pointer}
 <g id="icon-panel-left"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></g>
 <g id="icon-panel-open"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/></g>
 <g id="icon-radar"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62a10 10 0 1 0 19.02-1.27"/><path d="M16.24 7.76a6 6 0 1 0-8.01 8.91"/><path d="M12 18h.01"/><path d="M17.99 11.66a6 6 0 0 1-2.22 4.75"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></g>
+<g id="icon-book"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></g>
 <g id="icon-star"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></g>
 </defs>
 </svg>
@@ -1502,6 +1542,7 @@ CORE.CATEGORIES=["Company Action","Valuation/NAV","Legal/Docs","IC/Board","Admin
 CORE.DAYS=[{key:"mon",label:"Mon"},{key:"tue",label:"Tue"},{key:"wed",label:"Wed"},{key:"thu",label:"Thu"},{key:"fri",label:"Fri"}];
 CORE.COMPANIES=["Anansi","Arena","Awell Health","Bkwai","Bondaval","Codasip","Collectiv Food","Correcto","Dogtooth","Edgify","Elliptic","HURR","LabGenius","Lollipop","myTomorrows","Olio","Onibi","Perci Health","PngMe","Registrar","Segura","Sidekick","Skin+Me","Smiler","Tuune","Velaris","General"];
 CORE.OUTREACH_STATUS=["New","Outreach Sent","Responded","Meeting Booked","Intro Made","Follow-up Needed","Closed"];
+CORE.RADAR_ROUNDS=["Pre-seed","Seed","Angel","Growth","Other"];
 CORE.OUTREACH_STATUS_DOT={"New":"#a8a29e","Outreach Sent":"#60a5fa","Responded":"#c084fc","Meeting Booked":"#34d399","Intro Made":"#2D6B4A","Follow-up Needed":"#f59e0b","Closed":"#9ca3af"};
 CORE.REGIONS=["UK","EU","US","Other"];
 CORE.OUTREACH_TYPES=["General","Targeted"];
@@ -1523,8 +1564,9 @@ function emptyState(){
   return { version:CORE.VERSION, updated:now(),
     notes:{notebooks:[], pages:[]},
     tracker:{tasks:[], dayNotes:{}, dayNotesMeta:{}},
-    outreach:{companies:[], contacts:[]},
+    outreach:{companies:[], contacts:[], meetings:[]},
     radar:{deals:[], theses:[], pulses:[]},
+    reads:{items:[]},
     ai:{chats:[]},
     processedInbox:[]
   };
@@ -1537,10 +1579,20 @@ function migrate(s){
   s.notes.notebooks=s.notes.notebooks||[]; s.notes.pages=s.notes.pages||[];
   s.tracker=s.tracker||{tasks:[],dayNotes:{},dayNotesMeta:{}};
   s.tracker.tasks=s.tracker.tasks||[]; s.tracker.dayNotes=s.tracker.dayNotes||{}; s.tracker.dayNotesMeta=s.tracker.dayNotesMeta||{};
-  s.outreach=s.outreach||{companies:[],contacts:[]};
-  s.outreach.companies=s.outreach.companies||[]; s.outreach.contacts=s.outreach.contacts||[];
+  s.outreach=s.outreach||{companies:[],contacts:[],meetings:[]};
+  s.outreach.companies=s.outreach.companies||[]; s.outreach.contacts=s.outreach.contacts||[]; s.outreach.meetings=s.outreach.meetings||[];
   s.radar=s.radar||{deals:[],theses:[],pulses:[]};
   s.radar.deals=s.radar.deals||[]; s.radar.theses=s.radar.theses||[]; s.radar.pulses=s.radar.pulses||[];
+  s.reads=s.reads||{items:[]}; s.reads.items=s.reads.items||[];
+  /* v9.2 one-time repair: earlier pushes stored literal "### " markdown inside <p> — re-render them */
+  function fixFlat(arr){ (arr||[]).forEach(function(r){
+    if(!r||r.deleted||!r.html) return;
+    if(!/<p>#{1,4}\s/.test(r.html)) return;
+    var txt=String(r.html).replace(/<br\s*\/?>/gi,"\n").replace(/<\/p>\s*<p>/gi,"\n\n").replace(/<[^>]*>/g,"")
+      .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+    try{ var re=mdLiteCore(txt); if(re){ r.html=re; r.updated=now(); } }catch(e){}
+  }); }
+  fixFlat(s.radar.pulses); fixFlat(s.radar.theses); fixFlat(s.reads.items);
   s.ai=s.ai||{chats:[]}; s.ai.chats=s.ai.chats||[];
   s.processedInbox=s.processedInbox||[];
   s.version=CORE.VERSION;
@@ -1607,9 +1659,11 @@ var dn=mergeMap(local.tracker.dayNotes, local.tracker.dayNotesMeta, remote.track
 out.tracker.dayNotes=dn.map; out.tracker.dayNotesMeta=dn.meta;
 out.outreach.companies=mergeCollection(local.outreach.companies, remote.outreach.companies);
 out.outreach.contacts =mergeCollection(local.outreach.contacts, remote.outreach.contacts);
+out.outreach.meetings =mergeCollection((local.outreach||{}).meetings, (remote.outreach||{}).meetings);
 out.radar.deals =mergeCollection((local.radar||{}).deals, (remote.radar||{}).deals);
 out.radar.theses=mergeCollection((local.radar||{}).theses, (remote.radar||{}).theses);
 out.radar.pulses=mergeCollection((local.radar||{}).pulses, (remote.radar||{}).pulses);
+out.reads.items=mergeCollection((local.reads||{}).items, (remote.reads||{}).items);
 out.ai.chats=mergeCollection(local.ai.chats, remote.ai.chats);
 out.processedInbox=[].concat(local.processedInbox||[], remote.processedInbox||[]).filter(function(v,i,a){return a.indexOf(v)===i;});
 out.bundledNotesImported=!!(local.bundledNotesImported||remote.bundledNotesImported);
@@ -1631,8 +1685,9 @@ var cut=now()-45*86400000;
 function sweep(arr){ if(!arr) return; for(var i=arr.length-1;i>=0;i--){ var r=arr[i]; if(r && r.deleted && (r.updated||0)<cut) arr.splice(i,1); } }
 if(s && s.notes){ sweep(s.notes.notebooks); sweep(s.notes.pages); }
 if(s && s.tracker){ sweep(s.tracker.tasks); }
-if(s && s.outreach){ sweep(s.outreach.companies); sweep(s.outreach.contacts); }
+if(s && s.outreach){ sweep(s.outreach.companies); sweep(s.outreach.contacts); sweep(s.outreach.meetings); }
 if(s && s.radar){ sweep(s.radar.deals); sweep(s.radar.theses); sweep(s.radar.pulses); }
+if(s && s.reads){ sweep(s.reads.items); }
 if(s && s.ai){ sweep(s.ai.chats); }
 return s;
 }
@@ -1771,9 +1826,41 @@ var _th=((state.radar||{}).theses||[]).filter(function(x){return !x.deleted;});
 if(_th.length){ lines.push("\n## Active investment theses"); _th.slice(0,10).forEach(function(x){ lines.push("- "+x.title+(x.date?" ["+x.date+"]":"")); }); }
 var _pl=((state.radar||{}).pulses||[]).filter(function(x){return !x.deleted;}).sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")); });
 if(_pl.length){ lines.push("\n## Latest market pulse: "+_pl[0].title); }
+var _rd=(((state.reads||{}).items)||[]).filter(function(x){return !x.deleted;}).sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")); });
+if(_rd.length){ lines.push("## Latest deep read: "+_rd[0].title+" ["+(_rd[0].date||"")+"]"); }
 lines.push("\n## Notes");
 state.notes.pages.filter(function(p){return !p.deleted;}).slice(0,40).forEach(function(p){ lines.push("- "+p.title); });
 var s=lines.join("\n"); return s.length>6000?s.slice(0,6000)+"\n…(truncated)":s;
+}
+
+/* ---- v9.2 mdLite: markdown-ish plain text → editor-safe html (headings, bullets, bold, links) ---- */
+function mdLiteCore(src){
+var out=[], para=[], list=[];
+function inline(s){
+s=esc(s);
+s=s.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[^*])\*([^*\n]+)\*/g,"$1<i>$2</i>");
+s=s.replace(/(https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"])/g,'<a href="$1">$1</a>');
+return s;
+}
+function flushP(){ if(para.length){ out.push("<p>"+para.map(inline).join("<br>")+"</p>"); para=[]; } }
+function flushL(){ if(list.length){ out.push("<ul>"+list.map(function(x){ return "<li>"+inline(x)+"</li>"; }).join("")+"</ul>"); list=[]; } }
+String(src||"").replace(/\r\n?/g,"\n").split("\n").forEach(function(ln){
+var hm=/^\s*(#{1,4})\s+(.*)$/.exec(ln);
+if(hm){ flushP(); flushL(); var lvl=Math.max(2,Math.min(4,hm[1].length+1)); out.push("<h"+lvl+">"+inline(hm[2])+"</h"+lvl+">"); return; }
+if(/^\s*[-*•]\s+/.test(ln)){ flushP(); list.push(ln.replace(/^\s*[-*•]\s+/,"")); return; }
+if(/^\s*(-{3,}|—{3,})\s*$/.test(ln)){ flushP(); flushL(); out.push("<hr>"); return; }
+if(!ln.trim()){ flushP(); flushL(); return; }
+flushL(); para.push(ln);
+});
+flushP(); flushL();
+return out.join("");
+}
+CORE.mdLite=mdLiteCore;
+function bodyToHtml(v){
+var body=String(v||"");
+if(!body) return "";
+if(/<[a-z][\s\S]*>/i.test(body)) return body;
+return mdLiteCore(body);
 }
 
 /* ---- applyCommand + processInbox (e3 verbatim) ---- */
@@ -1809,7 +1896,7 @@ nb.sections=nb.sections||[]; if(!nb.sections.length) nb.sections.push({id:C.uid(
 var sname=cmd.section||nb.sections[0].name;
 var sec=nb.sections.filter(function(s){return s.name.toLowerCase()===String(sname).toLowerCase();})[0]||nb.sections[0];
 var content=String(cmd.content||cmd.body||"");
-var html=/<[a-z][\s\S]*>/i.test(content)?content:("<p>"+esc(content).replace(/\n/g,"<br>")+"</p>");
+var html=bodyToHtml(content)||"<p><br></p>";
 state.notes.pages.push({ id:C.uid(), notebookId:nb.id, sectionId:sec.id, title:ttl, tags:Array.isArray(cmd.tags)?cmd.tags:[], html:html, created:C.now(), updated:C.now() });
 return "note “"+ttl+"”";
 }
@@ -1839,8 +1926,7 @@ var tt=String(cmd.title||"").trim(); if(!tt) return null;
 state.radar=state.radar||{deals:[],theses:[],pulses:[]};
 var dupT=state.radar.theses.filter(function(x){ return !x.deleted && x.title.toLowerCase()===tt.toLowerCase(); })[0];
 if(dupT) return null;
-var body=String(cmd.html||cmd.content||"");
-if(body && !/<[a-z][\s\S]*>/i.test(body)) body="<p>"+esc(body).replace(/\n\n+/g,"</p><p>").replace(/\n/g,"<br>")+"</p>";
+var body=bodyToHtml(cmd.html||cmd.content||"");
 state.radar.theses.push({ id:C.uid(), title:tt, html:body, tags:Array.isArray(cmd.tags)?cmd.tags:[],
 date:cmd.date||localISO(new Date()), source:cmd.source||"routine", created:C.now(), updated:C.now() });
 return "thesis “"+tt+"”";
@@ -1852,14 +1938,54 @@ var pd=cmd.date||localISO(new Date());
 var pt=String(cmd.title||"").trim()||("Pulse — "+pd);
 var dupP=state.radar.pulses.filter(function(x){ return !x.deleted && x.title.toLowerCase()===pt.toLowerCase() && x.date===pd; })[0];
 if(dupP) return null;
-var pb=String(cmd.html||cmd.content||""); if(!pb) return null;
-if(!/<[a-z][\s\S]*>/i.test(pb)) pb="<p>"+esc(pb).replace(/\n\n+/g,"</p><p>").replace(/\n/g,"<br>")+"</p>";
+var pb=bodyToHtml(cmd.html||cmd.content||""); if(!pb) return null;
 state.radar.pulses.push({ id:C.uid(), title:pt, html:pb, date:pd, source:cmd.source||"routine", created:C.now(), updated:C.now() });
 /* cap: keep the newest 60 live pulses; tombstone the rest so the cap syncs */
 var live=state.radar.pulses.filter(function(x){ return !x.deleted; })
 .sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")) || (b.created||0)-(a.created||0); });
 live.slice(60).forEach(function(x){ x.deleted=true; x.updated=C.now(); });
 return "pulse “"+pt+"”";
+}
+if(t==="meeting"){
+var mn=String(cmd.name||"").trim(); if(!mn) return null;
+state.outreach.meetings=state.outreach.meetings||[];
+var mfirm=String(cmd.firm||"").trim();
+var mdate=cmd.date||localISO(new Date());
+var dupM=state.outreach.meetings.filter(function(x){ return !x.deleted && x.name.toLowerCase()===mn.toLowerCase() && x.date===mdate; })[0];
+if(dupM) return null;
+var mct=state.outreach.contacts.filter(function(c){ return !c.deleted && c.name.toLowerCase()===mn.toLowerCase(); })[0];
+if(!mct && cmd.createContact!==false){
+mct={id:C.uid(),name:mn,firm:mfirm,title:cmd.title||"",linkedinUrl:"",region:cmd.region||"UK",type:"Targeted",companyIds:[],
+status:"Responded",nextStep:cmd.nextStep||"",nextStepDate:cmd.nextStepDate||"",lastContactDate:mdate,
+email:cmd.email||"",notes:"",summary:"",dealsShared:"",dealsReceived:"",created:C.now(),updated:C.now()};
+state.outreach.contacts.push(mct);
+}else if(mct){
+if(!mct.lastContactDate||mct.lastContactDate<mdate) mct.lastContactDate=mdate;
+if(mfirm&&!mct.firm) mct.firm=mfirm;
+if(cmd.nextStep){ mct.nextStep=cmd.nextStep; mct.nextStepDate=cmd.nextStepDate||mct.nextStepDate; }
+mct.updated=C.now();
+}
+state.outreach.meetings.push({ id:C.uid(), contactId:mct?mct.id:null, name:mn, firm:mfirm||(mct?mct.firm:""),
+date:mdate, kind:cmd.kind||"Call", dealsShared:cmd.dealsShared||"", dealsReceived:cmd.dealsReceived||"",
+summary:cmd.summary||"", notes:cmd.notes||"", created:C.now(), updated:C.now() });
+return "meeting “"+mn+"”";
+}
+if(t==="read"||t==="briefing"){
+state.reads=state.reads||{items:[]};
+state.reads.items=state.reads.items||[];
+var rd2=cmd.date||localISO(new Date());
+var rt=String(cmd.title||"").trim()||("Briefing — "+rd2);
+var dupR=state.reads.items.filter(function(x){ return !x.deleted && x.title.toLowerCase()===rt.toLowerCase() && x.date===rd2; })[0];
+if(dupR) return null;
+var rb=bodyToHtml(cmd.html||cmd.content||""); if(!rb) return null;
+state.reads.items.push({ id:C.uid(), title:rt, html:rb, date:rd2,
+kind:cmd.kind||"briefing", tags:Array.isArray(cmd.tags)?cmd.tags:[],
+source:cmd.source||"routine", readAt:0, pinned:false, created:C.now(), updated:C.now() });
+/* cap: keep the newest 30 live unpinned reads; tombstone the rest so the cap syncs */
+var liveR=state.reads.items.filter(function(x){ return !x.deleted && !x.pinned; })
+.sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")) || (b.created||0)-(a.created||0); });
+liveR.slice(30).forEach(function(x){ x.deleted=true; x.updated=C.now(); });
+return "read “"+rt+"”";
 }
 return null;
 }
@@ -1869,7 +1995,7 @@ try{
 var arr=JSON.parse(inboxFile.content||"[]");
 if(!Array.isArray(arr)||!arr.length) return;
 state.processedInbox=state.processedInbox||[];
-var KNOWN=["task","contact","note","complete_task","complete","deal","thesis","pulse"];
+var KNOWN=["task","contact","note","complete_task","complete","deal","thesis","pulse","read","briefing","meeting"];
 var applied=[];
 arr.forEach(function(cmd){
 if(cmd && cmd.id!=null && state.processedInbox.indexOf(cmd.id)<0){
@@ -2413,7 +2539,8 @@ var NAV=[
 {v:"notes",label:"Notes",ic:"note",kbd:"⌘2"},
 {v:"outreach",label:"Outreach",ic:"users",kbd:"⌘3"},
 {v:"radar",label:"Deal Radar",ic:"radar",kbd:"⌘4"},
-{v:"assistant",label:"Assistant",ic:"sparkle",kbd:"⌘5"}
+{v:"reads",label:"Reads",ic:"book",kbd:"⌘5"},
+{v:"assistant",label:"Assistant",ic:"sparkle",kbd:"⌘6"}
 ];
 W.views=W.views||{};
 var themeBtn=null, themeLbl=null;
@@ -2507,12 +2634,12 @@ if(mod && e.shiftKey && (e.key==="f"||e.key==="F")){
 if(ui.view==="notes" && W.views.notes && W.views.notes.toggleFocus){ e.preventDefault(); W.views.notes.toggleFocus(); }
 return;
 }
-if(mod && !e.shiftKey && !e.altKey && e.key>="1" && e.key<="5"){ e.preventDefault(); nav(NAV[+e.key-1].v); return; }
+if(mod && !e.shiftKey && !e.altKey && e.key>="1" && e.key<="6"){ e.preventDefault(); nav(NAV[+e.key-1].v); return; }
 if(e.key==="Escape"){ if(W.layers.closeTop()) e.preventDefault(); return; }
 if(isTyping(e)||mod||e.altKey) return;
 if(e.key==="g"||e.key==="G"){ gArmed=Date.now(); return; }
 if(gArmed && Date.now()-gArmed<650){
-var map={w:"week",n:"notes",o:"outreach",r:"radar",a:"assistant",s:"settings"};
+var map={w:"week",n:"notes",o:"outreach",r:"radar",b:"reads",a:"assistant",s:"settings"};
 var k=e.key.toLowerCase();
 if(map[k]){ e.preventDefault(); gArmed=0; nav(map[k]); return; }
 gArmed=0;
@@ -2530,7 +2657,7 @@ W.shell={init:function(){ buildShell(); },nav:nav,toggleSidebar:toggleSidebar,sy
 function shortcutsOverlay(){
 var GROUPS=[
 {t:"General",rows:[["Command palette","⌘ K"],["Toggle sidebar","⌘ B"],["Settings","⌘ ,"],["This overlay","?"],["Close / back","Esc"]]},
-{t:"Navigate",rows:[["Week / Notes / Outreach / Radar / Assistant","⌘ 1-5"],["Go to week","G W"],["Go to notes","G N"],["Go to outreach","G O"],["Go to deal radar","G R"],["Go to assistant","G A"],["Go to settings","G S"]]},
+{t:"Navigate",rows:[["Week / Notes / Outreach / Radar / Reads / Assistant","⌘ 1-6"],["Go to week","G W"],["Go to notes","G N"],["Go to outreach","G O"],["Go to deal radar","G R"],["Go to reads (briefings)","G B"],["Go to assistant","G A"],["Go to settings","G S"]]},
 {t:"Week",rows:[["New task","N"],["Quick-add in lane","↵"],["Complete task","Click ◻"],["Drag between lanes","Hold + drag"]]},
 {t:"Notes",rows:[["New page","N"],["Focus mode","⌘ ⇧ F"],["Toggle list panes","⌘ \\"],["Insert block","/"],["Link a page","[["],["Text size","⌘ ⇧ > <"],["Title / Heading / Sub","⌘ ⌥ 1-3"],["Normal text","⌘ ⇧ N"],["Paste as plain text","⌘ ⇧ V"],["Table menu","Right-click cell"],["Move page/section up·down","⌥ ↑ ↓"],["Exit callout / code","⌘ ↵"]]}
 ];
@@ -2619,8 +2746,15 @@ items.push({group:"Deals",label:d.company,sub:[d.sector,d.round,d.amount].filter
 W.shell.nav("radar"); if(W.views.radar&&W.views.radar.reveal) W.views.radar.reveal(d.id);
 }});
 });
+(((st.reads||{}).items)||[]).filter(function(r){return !r.deleted;}).forEach(function(r){
+var sc=Math.max(fuzzy(q,r.title),fuzzy(q,(r.tags||[]).join(" "))-2);
+if(sc<0) return;
+items.push({group:"Reads",label:r.title,sub:(r.date||"")+(r.readAt?"":" · unread"),ic:"book",score:sc,id:"r:"+r.id,run:function(){
+W.shell.nav("reads"); if(W.views.reads&&W.views.reads.reveal) W.views.reads.reveal(r.id);
+}});
+});
 items.sort(function(a,b){ return b.score-a.score; });
-var byGroup={Notes:0,Tasks:0,Contacts:0,Deals:0};
+var byGroup={Notes:0,Tasks:0,Contacts:0,Deals:0,Reads:0};
 return items.filter(function(it){ byGroup[it.group]++; return byGroup[it.group]<=5; });
 }
 function openPalette(){
@@ -6686,13 +6820,30 @@ return h("span.os-chip",{style:"--os:"+(OS_TOK[s]||"var(--text-4)")},h("span.dot
 function contacts(){ return ENG.state.outreach.contacts.filter(function(c){ return !c.deleted; }); }
 function companies(){ return ENG.state.outreach.companies.filter(function(c){ return !c.deleted; }); }
 function dealLines(v){ return String(v||"").split(/\n|;/).map(function(x){ return x.trim(); }).filter(Boolean); }
+/* v9.4 — meetings are the source of truth; contact-level deals are DERIVED (legacy text still counted) */
+function meetingsFor(c){
+return meetings().filter(function(m){ return m.contactId===c.id || (m.name||"").toLowerCase()===(c.name||"").toLowerCase(); })
+.sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")); });
+}
+function dealsForContact(c){
+var out=dealLines(c.dealsShared), inn=dealLines(c.dealsReceived);
+meetingsFor(c).forEach(function(m){ out=out.concat(mLines(m.dealsShared)); inn=inn.concat(mLines(m.dealsReceived)); });
+function uniq(a){ var seen={},r=[]; a.forEach(function(x){ var k=x.toLowerCase().replace(/\s*\(.*$/,"").trim(); if(k&&!seen[k]){ seen[k]=1; r.push(x); } }); return r; }
+return {out:uniq(out),inn:uniq(inn)};
+}
+function summaryForContact(c){
+if((c.summary||"").trim()) return c.summary.trim();
+var ms=meetingsFor(c);
+return ms.length?(ms[0].summary||""):"";
+}
 /* ---- v9: one-click Excel export ---- */
 function exportExcel(){
 var rows=[["Name","Email","Last contact","VC / Firm","Title","Status","Region","Type","Summary","Deals I shared","Deals they shared","Next contact","Next contact date","Companies","LinkedIn","Notes"]];
 contacts().slice().sort(function(a,b){ return String(a.name).localeCompare(String(b.name)); }).forEach(function(c){
 var comps=(c.companyIds||[]).map(companyById).filter(Boolean).map(function(co){ return co.name; }).join(", ");
+var dd=dealsForContact(c);
 rows.push([c.name||"",c.email||"",c.lastContactDate||"",c.firm||"",c.title||"",c.status||"",c.region||"",c.type||"",
-c.summary||"",dealLines(c.dealsShared).join("; "),dealLines(c.dealsReceived).join("; "),
+summaryForContact(c),dd.out.join("; "),dd.inn.join("; "),
 c.nextStep||"",c.nextStepDate||"",comps,c.linkedinUrl||"",c.notes||""]);
 });
 var widths=[22,26,13,22,20,15,8,10,42,30,30,26,14,24,34,42];
@@ -6766,6 +6917,7 @@ var body=h("div.or-body");
 var inner=h("div.or-inner");
 if(tab==="week") renderWeek(inner);
 else if(tab==="contacts") renderContacts(inner);
+else if(tab==="meetings") renderMeetings(inner);
 else renderCompanies(inner);
 body.appendChild(inner);
 root.appendChild(body);
@@ -6779,13 +6931,13 @@ return h("header.view-head.or-head",
 h("div.vh-row",
 h("h1.vh-title","Outreach"),
 h("div.vh-actions",
-h("button.btn.btn-secondary",{type:"button","aria-label":"Download as Excel","data-tip":"Download all contacts as .xlsx",onclick:function(){ exportExcel(); }},icon("download",15),"Excel"),
+h("button.btn.btn-secondary",{type:"button","aria-label":"Download as Excel","data-tip":tab==="meetings"?"Download meetings as .xlsx":"Download all contacts as .xlsx",onclick:function(){ if(tab==="meetings") exportMeetingsExcel(); else exportExcel(); }},icon("download",15),"Excel"),
 briefBtn,
-h("button.btn.btn-secondary",{type:"button","aria-label":"New company",onclick:function(){ openCompanyModal(null); }},icon("building",15),"Company"),
+h("button.btn.btn-secondary",{type:"button","aria-label":"Log meeting","data-tip":"Log a call or meeting",onclick:function(){ openMeetingModal(null); }},icon("calendar",15),"Meeting"),
 h("button.btn.btn-secondary",{type:"button","aria-label":"New contact","data-kbd":"N","data-tip":"New contact",onclick:function(){ openContactModal(null); }},icon("user-plus",15),"Contact"))),
-h("div.or-sub","Investor networking — "+n+" contact"+(n===1?"":"s")),
+h("div.or-sub","Investor networking — "+n+" contact"+(n===1?"":"s")+" · "+meetings().length+" meeting"+(meetings().length===1?"":"s")),
 h("div.or-tabs",
-W.segmented([{v:"week",label:"This week"},{v:"contacts",label:"Contacts"},{v:"companies",label:"Companies"}],tab,function(v){ tab=v; rr(); })));
+W.segmented([{v:"week",label:"This week"},{v:"meetings",label:"Meetings"},{v:"contacts",label:"Contacts"},{v:"companies",label:"Companies"}],tab,function(v){ tab=v; rr(); })));
 }
 
 /* ---- THIS WEEK tab ---- */
@@ -6940,8 +7092,11 @@ h("div.ot-c.c-firm",h("div.truncate",c.firm||"—"),c.title?h("div.r2.truncate",
 h("div.ot-c.c-status",osChip(c.status)),
 h("div.ot-c.c-region",(c.region||"—")+" · "+(c.type||"General")),
 h("div.ot-c.c-last",{title:absDay(c.lastContactDate)},relDay(c.lastContactDate)),
-h("div.ot-c.c-deals",{title:"Deals I shared: "+(dealLines(c.dealsShared).join(", ")||"—")+"\nDeals they shared: "+(dealLines(c.dealsReceived).join(", ")||"—")},
-(dealLines(c.dealsShared).length||dealLines(c.dealsReceived).length)?(dealLines(c.dealsShared).length+" ⇄ "+dealLines(c.dealsReceived).length):"—"),
+(function(){
+var dd=dealsForContact(c);
+return h("div.ot-c.c-deals",{title:"Deals I shared: "+(dd.out.join(", ")||"—")+"\nDeals they shared: "+(dd.inn.join(", ")||"—")},
+(dd.out.length||dd.inn.length)?(dd.out.length+" ⇄ "+dd.inn.length):"—");
+})(),
 h("div.ot-c.c-next",c.nextStep||c.nextStepDate?
 h("div.stp",
 c.nextStep?h("span.txt","→ "+c.nextStep):h("span.txt",{style:"color:var(--text-4)"},"—"),
@@ -6990,6 +7145,145 @@ inner.appendChild(grid);
 function deleteCompany(co){
 co.deleted=true; ENG.touch(co); ENG.save(false); rr();
 W.toast("Company deleted",{undo:function(){ delete co.deleted; ENG.touch(co); ENG.save(false); rr(); }});
+}
+
+/* ---- MEETINGS tab (v9.3 — networking log, Affinity-ready) ---- */
+function meetings(){ ENG.state.outreach.meetings=ENG.state.outreach.meetings||[]; return ENG.state.outreach.meetings.filter(function(m){ return !m.deleted; }); }
+function mLines(v){ return String(v||"").split(/\n|;/).map(function(x){ return x.trim(); }).filter(Boolean); }
+function affinityText(m){
+var out=["Call with "+m.name+(m.firm?" ("+m.firm+")":"")+" — "+absDay(m.date)];
+if(m.summary) out.push("",m.summary.trim());
+var ds=mLines(m.dealsShared), dr=mLines(m.dealsReceived);
+if(ds.length){ out.push("","Deals we shared:"); ds.forEach(function(x){ out.push("- "+x); }); }
+if(dr.length){ out.push("","Deals they shared:"); dr.forEach(function(x){ out.push("- "+x); }); }
+return out.join("\n");
+}
+var mQ="";
+function renderMeetings(inner){
+if(!meetings().length){
+inner.appendChild(h("div.empty",
+h("div.empty-icon",icon("calendar",20)),
+h("h3","No meetings logged yet"),
+h("p","Log every networking call in 30 seconds — who, which fund, what you swapped. One click copies an Affinity-ready summary, and the contact's last-touch date updates itself."),
+h("div.empty-cta",h("button.btn.btn-ink",{type:"button",onclick:function(){ openMeetingModal(null); }},icon("calendar",15),"Log a meeting"))));
+return;
+}
+var si=h("input.input",{type:"search",value:mQ,placeholder:"Search meetings…","aria-label":"Search meetings"});
+si.addEventListener("input",function(){ mQ=si.value; redraw(); });
+inner.appendChild(h("div.ct-tools",h("div.ct-search",icon("search",14),si)));
+var holder=h("div");
+inner.appendChild(holder);
+function filteredM(){
+var q=mQ.trim().toLowerCase();
+return meetings().filter(function(m){
+if(!q) return true;
+return (m.name+" "+(m.firm||"")+" "+(m.summary||"")+" "+(m.dealsShared||"")+" "+(m.dealsReceived||"")).toLowerCase().indexOf(q)>=0;
+}).sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")) || (b.created||0)-(a.created||0); });
+}
+function redraw(){
+holder.innerHTML="";
+var wrap=h("div");
+wrap.appendChild(h("div.ot-hd.mt-grid",
+h("div.ot-hc","Date"),h("div.ot-hc","Who"),h("div.ot-hc","Deals I shared"),h("div.ot-hc","Deals they shared"),h("div.ot-hc","Summary"),h("div.ot-hc","")));
+filteredM().forEach(function(m){ wrap.appendChild(mtRow(m)); });
+holder.appendChild(wrap);
+}
+redraw();
+}
+function mtRow(m){
+var ds=mLines(m.dealsShared), dr=mLines(m.dealsReceived);
+var row=h("div.ot-row.mt-grid.reveal-scope",{dataset:{id:m.id},role:"button",tabindex:"0","aria-label":"Meeting with "+m.name},
+h("div.ot-c.tnum",{title:m.date},relDay(m.date)),
+h("div.ot-c",h("div.truncate",{style:"font-weight:600"},m.name),m.firm?h("div.r2.truncate",m.firm):null),
+h("div.ot-c.mt-deals",ds.length?ds.slice(0,3).map(function(x){ return h("div.truncate","→ "+x); }):h("span",{style:"color:var(--text-4)"},"—"),ds.length>3?h("div.r2","+"+(ds.length-3)+" more"):null),
+h("div.ot-c.mt-deals",dr.length?dr.slice(0,3).map(function(x){ return h("div.truncate","← "+x); }):h("span",{style:"color:var(--text-4)"},"—"),dr.length>3?h("div.r2","+"+(dr.length-3)+" more"):null),
+h("div.ot-c.mt-sum",(m.summary||"—").slice(0,160)),
+h("div.ot-c.c-acts",
+h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Copy for Affinity","data-tip":"Copy Affinity summary",onclick:function(e){ e.stopPropagation(); copyText(affinityText(m)); W.toast("Affinity summary copied ✓"); }},icon("copy",15)),
+h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit meeting","data-tip":"Edit",onclick:function(e){ e.stopPropagation(); openMeetingModal(m.id); }},icon("pencil",15)),
+h("button.icon-btn.danger.hover-reveal",{type:"button","aria-label":"Delete meeting","data-tip":"Delete",onclick:function(e){ e.stopPropagation(); deleteMeeting(m); }},icon("trash",15))));
+row.addEventListener("click",function(){ openMeetingModal(m.id); });
+row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openMeetingModal(m.id); } });
+return row;
+}
+function deleteMeeting(m){
+m.deleted=true; ENG.touch(m); ENG.save(false); rr();
+W.toast("Meeting deleted",{undo:function(){ delete m.deleted; ENG.touch(m); ENG.save(false); rr(); }});
+}
+function openMeetingModal(id,defaults){
+defaults=defaults||{};
+var m=id?ENG.state.outreach.meetings.filter(function(x){ return x.id===id; })[0]:null;
+var isNew=!m;
+W.modal(function(box,close){
+var p=W.modalParts(box,close,isNew?"Log meeting":"Edit meeting",{ic:"calendar"});
+var fName=h("input.input",{type:"text",value:m?m.name:(defaults.name||""),"aria-label":"Name",placeholder:"Who you met",autofocus:true,list:"mt-contacts"});
+var dl=h("datalist#mt-contacts");
+contacts().forEach(function(c){ dl.appendChild(h("option",{value:c.name},c.firm||"")); });
+var fFirm=h("input.input",{type:"text",value:m?(m.firm||""):(defaults.firm||""),"aria-label":"Fund / firm",placeholder:"VC fund"});
+fName.addEventListener("change",function(){
+var c=contacts().filter(function(x){ return x.name.toLowerCase()===fName.value.trim().toLowerCase(); })[0];
+if(c&&!fFirm.value) fFirm.value=c.firm||"";
+});
+var fDate=h("input.input",{type:"date",value:m?(m.date||""):C.localISO(new Date()),"aria-label":"Meeting date"});
+var fKind=selEl(["Call","Meeting","Coffee","Event","Dinner"],m?(m.kind||"Call"):"Call","Kind");
+var fOut=h("textarea.input",{rows:"3","aria-label":"Deals I shared",placeholder:"One per line — deals you sent them"},m?(m.dealsShared||""):"");
+var fIn=h("textarea.input",{rows:"3","aria-label":"Deals they shared",placeholder:"One per line — deals they sent you"},m?(m.dealsReceived||""):"");
+var fSum=h("textarea.input",{rows:"4","aria-label":"Summary",placeholder:"The Affinity-ready summary — fund facts, thesis, their background, chemistry…"},m?(m.summary||""):"");
+var fNotes=h("textarea.input",{rows:"3","aria-label":"Full notes",placeholder:"Anything else — raw notes, follow-ups"},m?(m.notes||""):"");
+var fNext=h("input.input",{type:"text",value:"","aria-label":"Next step",placeholder:"e.g. Send Bondaval teaser (updates the contact)"});
+var fNextDate=h("input.input",{type:"date",value:"","aria-label":"Next step date"});
+p.body.appendChild(dl);
+p.body.appendChild(h("div.form-grid",
+h("div.field",h("label","Name *"),fName),
+h("div.field",h("label","Fund / firm"),fFirm),
+h("div.field",h("label","Date"),fDate),
+h("div.field",h("label","Kind"),fKind),
+h("div.field",h("label","Deals I shared"),fOut),
+h("div.field",h("label","Deals they shared"),fIn),
+h("div.field.span2",h("label","Summary (Affinity-ready)"),fSum),
+h("div.field",h("label","Next step → contact"),fNext),
+h("div.field",h("label","Next step date"),fNextDate),
+h("div.field.span2",h("label","Full notes"),fNotes)));
+function commit(){
+var nm=fName.value.trim();
+if(!nm){ fName.focus(); return; }
+if(isNew){
+var res=ENG.applyCommand({type:"meeting",name:nm,firm:fFirm.value.trim(),date:fDate.value||C.localISO(new Date()),
+kind:fKind.value,dealsShared:fOut.value.trim(),dealsReceived:fIn.value.trim(),summary:fSum.value.trim(),notes:fNotes.value,
+nextStep:fNext.value.trim(),nextStepDate:fNextDate.value||""});
+if(!res){ W.toast("A meeting with "+nm+" on that date already exists",true); return; }
+}else{
+m.name=nm; m.firm=fFirm.value.trim(); m.date=fDate.value||m.date; m.kind=fKind.value;
+m.dealsShared=fOut.value.trim(); m.dealsReceived=fIn.value.trim(); m.summary=fSum.value.trim(); m.notes=fNotes.value;
+ENG.touch(m);
+var lc=ENG.state.outreach.contacts.filter(function(c){ return !c.deleted && c.id===m.contactId; })[0];
+if(lc){
+if(!lc.lastContactDate||lc.lastContactDate<m.date) lc.lastContactDate=m.date;
+if(fNext.value.trim()){ lc.nextStep=fNext.value.trim(); lc.nextStepDate=fNextDate.value||lc.nextStepDate; }
+ENG.touch(lc);
+}
+}
+ENG.save(false); close(); tab="meetings"; rr();
+W.toast(isNew?"Meeting logged ✓ — contact updated":"Meeting saved ✓");
+}
+box.addEventListener("keydown",function(e){ if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ e.preventDefault(); commit(); } });
+if(!isNew){
+var cpy=h("button.btn.btn-secondary",{type:"button"},icon("copy",15),"Copy for Affinity");
+cpy.addEventListener("click",function(){ copyText(affinityText(m)); W.toast("Affinity summary copied ✓"); });
+p.foot.appendChild(cpy);
+}
+p.foot.appendChild(h("div.spacer"));
+p.foot.appendChild(h("button.btn.btn-ghost",{type:"button",onclick:function(){ close(); }},"Cancel"));
+p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:commit},isNew?"Log meeting":"Save"));
+},{wide:true});
+}
+function exportMeetingsExcel(){
+var rows=[["Date","Name","VC fund","Kind","Deals I shared","Deals they shared","Summary","Full notes"]];
+meetings().slice().sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")); }).forEach(function(m){
+rows.push([m.date||"",m.name||"",m.firm||"",m.kind||"",mLines(m.dealsShared).join("; "),mLines(m.dealsReceived).join("; "),m.summary||"",m.notes||""]);
+});
+W.xlsx.download("meetings-"+todayISO()+".xlsx","Meetings",rows,[12,22,24,10,38,38,60,60]);
+W.toast("Excel downloaded — "+(rows.length-1)+" meetings ✓");
 }
 
 /* ---- LinkedIn paste parse (AI via parseModel; heuristic fallback) ---- */
@@ -7104,16 +7398,13 @@ var fTitle=h("input.input",{type:"text",value:c?(c.title||""):"","aria-label":"T
 var fEmail=h("input.input",{type:"email",value:c?(c.email||""):"","aria-label":"Email",placeholder:"name@firm.com"});
 var fLi=h("input.input",{type:"url",value:c?(c.linkedinUrl||""):"","aria-label":"LinkedIn URL",placeholder:"linkedin.com/in/…"});
 var fRegion=selEl(C.REGIONS,c?(c.region||"UK"):"UK","Region");
-var fType=selEl(C.OUTREACH_TYPES,c?(c.type||"General"):"General","Type");
 var fStatus=selEl(C.OUTREACH_STATUS,c?(c.status||"New"):"New","Status");
 var picker=companyPicker(c?(c.companyIds||[]).slice():[]);
 var fLast=h("input.input",{type:"date",value:c?(c.lastContactDate||""):"","aria-label":"Last contact date"});
 var fStep=h("input.input",{type:"text",value:c?(c.nextStep||""):"","aria-label":"Next step",placeholder:"e.g. Send intro email"});
 var fStepDate=h("input.input",{type:"date",value:c?(c.nextStepDate||""):"","aria-label":"Next step date"});
 var fNotes=h("textarea.input",{rows:"3","aria-label":"Notes",placeholder:"Context, intros, warm paths…"},c?(c.notes||""):"");
-var fSummary=h("textarea.input",{rows:"2","aria-label":"Summary",placeholder:"Who they are + state of the relationship, in a line or two"},c?(c.summary||""):"");
-var fDealsOut=h("textarea.input",{rows:"2","aria-label":"Deals I shared",placeholder:"One per line — deals you sent them"},c?(c.dealsShared||""):"");
-var fDealsIn=h("textarea.input",{rows:"2","aria-label":"Deals they shared",placeholder:"One per line — deals they sent you"},c?(c.dealsReceived||""):"");
+var fSummary=h("textarea.input",{rows:"2","aria-label":"Summary",placeholder:"Who they are + state of the relationship (auto-falls back to latest meeting summary)"},c?(c.summary||""):"");
 /* ✦ LinkedIn paste box */
 var liTa=h("textarea.input",{rows:"4","aria-label":"LinkedIn profile text",placeholder:"Paste the profile — name, headline, current role…"});
 var liParse=h("button.btn.btn-secondary.btn-sm",{type:"button","aria-label":"Parse profile"},icon("sparkle",14),h("span","Parse"));
@@ -7155,23 +7446,46 @@ liParse.disabled=false; liParse.querySelector("span").textContent="Parse";
 });
 });
 p.body.appendChild(liBox);
+/* v9.4 — essentials up front; everything else folded away */
 p.body.appendChild(h("div.form-grid",
 h("div.field",h("label","Name *"),fName),
 h("div.field",h("label","Firm"),fFirm),
 h("div.field",h("label","Title"),fTitle),
 h("div.field",h("label","Email"),fEmail),
-h("div.field.span2",h("label","LinkedIn URL"),fLi),
-h("div.field",h("label","Region"),fRegion),
-h("div.field",h("label","Type"),fType),
 h("div.field",h("label","Status"),fStatus),
 h("div.field",h("label","Last contact"),fLast),
-h("div.field.span2",h("label","Companies"),picker.el),
 h("div.field",h("label","Next step"),fStep),
-h("div.field",h("label","Next step date"),fStepDate),
+h("div.field",h("label","Next step date"),fStepDate)));
+var moreBody=h("div.form-grid",{style:"display:none;margin-top:10px"},
+h("div.field.span2",h("label","LinkedIn URL"),fLi),
+h("div.field",h("label","Region"),fRegion),
+h("div.field",h("label","Companies"),picker.el),
 h("div.field.span2",h("label","Summary"),fSummary),
-h("div.field",h("label","Deals I shared"),fDealsOut),
-h("div.field",h("label","Deals they shared"),fDealsIn),
-h("div.field.span2",h("label","Notes"),fNotes)));
+h("div.field.span2",h("label","Notes"),fNotes));
+var moreBtn=h("button.btn.btn-ghost.btn-sm",{type:"button",style:"margin-top:10px","aria-expanded":"false"},icon("chevron-d",13),"More details");
+moreBtn.addEventListener("click",function(){
+var open=moreBody.style.display==="none";
+moreBody.style.display=open?"grid":"none";
+moreBtn.setAttribute("aria-expanded",String(open));
+});
+p.body.appendChild(moreBtn);
+p.body.appendChild(moreBody);
+/* meeting history — deals are DERIVED from these, no double entry */
+if(!isNew){
+var dd=dealsForContact(c), ms=meetingsFor(c);
+var mh=h("div",{style:"margin-top:14px;padding-top:12px;border-top:1px solid var(--border-hairline)"});
+mh.appendChild(h("div",{style:"display:flex;align-items:center;gap:8px;margin-bottom:6px"},
+h("div.sw-lbl",{style:"padding:0;flex:1"},"Meetings ("+ms.length+") · deals "+dd.out.length+" ⇄ "+dd.inn.length+" — auto-derived"),
+h("button.btn.btn-secondary.btn-sm",{type:"button",onclick:function(){ close(); openMeetingModal(null,{name:c.name,firm:c.firm}); }},icon("calendar",13),"Log meeting")));
+ms.slice(0,3).forEach(function(m){
+var row=h("button.menu-item",{type:"button",style:"width:100%"},icon("calendar",14),
+h("span",{style:"flex:1;min-width:0;text-align:left"},(m.kind||"Call")+" · "+relDay(m.date)+(m.summary?" — "+m.summary.slice(0,60):"")));
+row.addEventListener("click",function(){ close(); openMeetingModal(m.id); });
+mh.appendChild(row);
+});
+if(!ms.length) mh.appendChild(h("div",{style:"font-size:12px;color:var(--text-4)"},"No meetings logged yet — log one and the deal history builds itself."));
+p.body.appendChild(mh);
+}
 function commit(){
 var nm=fName.value.trim();
 if(!nm){ fName.focus(); return; }
@@ -7179,18 +7493,20 @@ var ids=picker.resolve();
 if(isNew){
 ENG.state.outreach.contacts.push({
 id:C.uid(),name:nm,firm:fFirm.value.trim(),title:fTitle.value.trim(),linkedinUrl:fLi.value.trim(),
-region:fRegion.value,type:fType.value,companyIds:ids,status:fStatus.value,
+region:fRegion.value,type:(ids.length?"Targeted":"General"),companyIds:ids,status:fStatus.value,
 nextStep:fStep.value.trim(),nextStepDate:fStepDate.value||"",lastContactDate:fLast.value||"",
 email:fEmail.value.trim(),notes:fNotes.value,
-summary:fSummary.value.trim(),dealsShared:fDealsOut.value.trim(),dealsReceived:fDealsIn.value.trim(),
+summary:fSummary.value.trim(),dealsShared:"",dealsReceived:"",
 created:C.now(),updated:C.now()
 });
 }else{
 c.name=nm; c.firm=fFirm.value.trim(); c.title=fTitle.value.trim(); c.linkedinUrl=fLi.value.trim();
-c.region=fRegion.value; c.type=fType.value; c.companyIds=ids; c.status=fStatus.value;
+c.region=fRegion.value; c.companyIds=ids; c.status=fStatus.value;
+if(ids.length&&c.type!=="Targeted") c.type="Targeted";
 c.nextStep=fStep.value.trim(); c.nextStepDate=fStepDate.value||""; c.lastContactDate=fLast.value||"";
 c.email=fEmail.value.trim(); c.notes=fNotes.value;
-c.summary=fSummary.value.trim(); c.dealsShared=fDealsOut.value.trim(); c.dealsReceived=fDealsIn.value.trim();
+c.summary=fSummary.value.trim();
+/* deals fields intentionally untouched — they now derive from meetings (legacy text preserved) */
 ENG.touch(c);
 }
 ENG.save(false); close(); rr();
@@ -7282,7 +7598,8 @@ _linkedinHeuristic:linkedinHeuristic
 var W=window.__ws, h=W.h, $=W.$, $$=W.$$, icon=W.icon, ui=W.ui, ENG=W.eng, C=W.core;
 var MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 var SECTORS=["Fintech","AI","Fintech × AI","Deeptech","Other"];
-var ROUNDS=["Pre-seed","Seed","Angel","Other"];
+var ROUNDS=C.RADAR_ROUNDS||["Pre-seed","Seed","Angel","Growth","Other"];
+var EARLY_ROUNDS={"Pre-seed":1,"Seed":1,"Angel":1};
 var DSTATUS=["New","Watching","Met","Tracked","Passed"];
 var DS_TOK={"New":"var(--info)","Watching":"var(--warn)","Met":"var(--purple)","Tracked":"var(--ok)","Passed":"var(--text-4)"};
 var tab="deals", q="", fSec="", fRound="", fSt="", sortKey="announced", sortDir=-1, fWin=null;
@@ -7402,14 +7719,14 @@ var momentum=Object.keys(secs).map(function(s){ return {sector:s,now:secNow[s]||
 /* most active investors, 90d */
 var inv={};
 last90.forEach(function(d){
-String(d.investors||"").split(/,|·/).map(function(x){ return x.trim(); }).filter(function(x){ return x.length>2; })
+String(d.investors||"").split(/,|·/).map(function(x){ return x.replace(/\([^)]*\)/g,"").replace(/\b(lead|co-lead|per press|angels?)\b/gi,"").replace(/\s+/g," ").trim(); }).filter(function(x){ return x.length>2; })
 .forEach(function(nm){ var k=nm.toLowerCase(); inv[k]=inv[k]||{name:nm,n:0}; inv[k].n++; });
 });
 var topInv=Object.keys(inv).map(function(k){ return inv[k]; }).sort(function(a,b){ return b.n-a.n; }).slice(0,6).filter(function(x){ return x.n>1; });
 /* median round, 90d */
 var med={};
 ["Fintech","AI"].forEach(function(sec){
-var vals=last90.filter(function(d){ return String(d.sector||"").indexOf(sec)>=0 && d.amount; })
+var vals=last90.filter(function(d){ return String(d.sector||"").indexOf(sec)>=0 && d.amount && EARLY_ROUNDS[d.round||"Seed"]; })
 .map(function(d){ return parseMillions(d.amount); }).filter(function(v){ return v!=null&&v>0; });
 med[sec]={n:vals.length,v:median(vals)};
 });
@@ -7449,7 +7766,7 @@ h("span.tr-delta",{class:d>0?"up":(d<0?"dn":"")},d>0?"▲ +"+d:(d<0?"▼ "+d:"�
 var ti=h("div.tr-card.card",h("div.tr-t","Most active investors",h("span.tr-sub","90 days")));
 if(s.topInv.length) s.topInv.forEach(function(x){ ti.appendChild(h("div.tr-row",h("span.tr-l.truncate",x.name),h("span.tr-v.tnum",x.n+" deals"))); });
 else ti.appendChild(h("div.tr-none","No repeat investors yet"));
-var md=h("div.tr-card.card",h("div.tr-t","Median round",h("span.tr-sub","90 days")));
+var md=h("div.tr-card.card",h("div.tr-t","Median round",h("span.tr-sub","90d · early rounds only")));
 ["Fintech","AI"].forEach(function(sec){
 var m=s.med[sec];
 md.appendChild(h("div.tr-row",h("span.tr-l",sec),h("span.tr-v.tnum",m&&m.v!=null?("~"+(Math.round(m.v*10)/10)+"m ("+m.n+")"):"—")));
@@ -7832,6 +8149,182 @@ exportDeals:exportDeals
 })();
 </script>
 <!-- ===== END VIEW_RADAR ===== -->
+<!-- ===== MODULE: VIEW_READS (v9.2 — deep briefings, twice-weekly reading room) ===== -->
+<script>
+(function(){
+"use strict";
+var W=window.__ws, h=W.h, $=W.$, $$=W.$$, icon=W.icon, ui=W.ui, ENG=W.eng, C=W.core;
+var MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var q="", fKind="";
+function reads(){ ENG.state.reads=ENG.state.reads||{items:[]}; ENG.state.reads.items=ENG.state.reads.items||[]; return ENG.state.reads.items.filter(function(r){ return !r.deleted; }); }
+function absDay(iso){
+if(!iso) return "—";
+try{ var d=C.parseLocal(iso); return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()]+" "+d.getDate()+" "+MO[d.getMonth()]+(d.getFullYear()!==new Date().getFullYear()?" "+d.getFullYear():""); }catch(e){ return iso; }
+}
+function sanitize(html){ try{ return ENG.cleanPaste(String(html||"")); }catch(e){ return W.esc(String(html||"")); } }
+function strip(html){ return String(html||"").replace(/<[^>]*>/g," ").replace(/&[a-z#0-9]+;/gi," ").replace(/\s+/g," ").trim(); }
+function isFriday(r){ try{ return C.parseLocal(r.date).getDay()===5; }catch(e){ return false; } }
+function kindOf(r){ return r.kind==="deepdive"?"deepdive":"briefing"; }
+function rr(){
+var el=$("#view");
+if(ui.view!=="reads"||!el) return;
+el.innerHTML=""; render(el);
+}
+function render(el){
+var root=h("div.reads");
+root.appendChild(head());
+var body=h("div.rd-body");
+var inner=h("div.rd-inner");
+renderList(inner);
+body.appendChild(inner);
+root.appendChild(body);
+el.appendChild(root);
+}
+function head(){
+var list=reads();
+var unread=list.filter(function(r){ return !r.readAt; }).length;
+return h("header.view-head",
+h("div.vh-row",
+h("h1.vh-title","Reads"),
+h("div.vh-actions",
+h("button.btn.btn-ink",{type:"button","aria-label":"Write a read",onclick:function(){ openReadModal(null); }},icon("plus",15),"New read"))),
+h("div.or-sub","Deep briefings, twice a week (Tue + Fri): your newsletters, the week's signals and one proper deep dive — written to be read, not skimmed."+(unread?(" · "+unread+" unread"):"")),
+h("div.rd-tools",{style:"padding:0 26px;max-width:1112px;margin:0 auto;width:100%"},
+(function(){
+var si=h("input",{type:"search",value:q,placeholder:"Search briefings…","aria-label":"Search reads"});
+si.addEventListener("input",function(){ q=si.value; rr(); });
+return h("div.rd-search",icon("search",14),si);
+})(),
+(function(){
+var s=h("select.select",{"aria-label":"Filter kind"});
+[["","All kinds"],["briefing","Briefings"],["deepdive","Deep dives"],["pinned","Pinned"],["unread","Unread"]].forEach(function(o){
+var op=h("option",{value:o[0]},o[1]); if(o[0]===fKind) op.selected=true; s.appendChild(op);
+});
+s.addEventListener("change",function(){ fKind=s.value; rr(); });
+return s;
+})()));
+}
+function filtered(){
+var qq=q.trim().toLowerCase();
+return reads().filter(function(r){
+if(fKind==="pinned"&&!r.pinned) return false;
+if(fKind==="unread"&&r.readAt) return false;
+if((fKind==="briefing"||fKind==="deepdive")&&kindOf(r)!==fKind) return false;
+if(qq){
+var hay=(r.title+" "+(r.tags||[]).join(" ")+" "+strip(r.html)).toLowerCase();
+if(hay.indexOf(qq)<0) return false;
+}
+return true;
+}).sort(function(a,b){ return (b.pinned?1:0)-(a.pinned?1:0) || String(b.date||"").localeCompare(String(a.date||"")) || (b.created||0)-(a.created||0); });
+}
+function renderList(inner){
+var list=filtered();
+if(!reads().length){
+inner.appendChild(h("div.empty",{style:"margin-top:40px"},
+h("div.empty-icon",icon("book",20)),
+h("h3","Your reading room is empty"),
+h("p","Every Tuesday and Friday morning Claude reads your newsletters in full — Fintech Brainfood, Sifted, EUVC, the weekly deep reads — sweeps the news across fintech, healthtech, European VC, AI and macro, and writes you one proper briefing with a deep dive. Fridays add podcast picks and the weekly thesis tracker."),
+h("div.empty-cta",h("button.btn.btn-ink",{type:"button",onclick:function(){ openReadModal(null); }},icon("plus",15),"Write one yourself"))));
+return;
+}
+if(!list.length){
+inner.appendChild(h("div.empty",{style:"padding:36px 24px"},
+h("div.empty-icon",icon("search",20)),
+h("h3","No reads match"),
+h("div.empty-cta",h("button.btn.btn-ghost",{type:"button",onclick:function(){ q=""; fKind=""; rr(); }},"Clear filters"))));
+return;
+}
+var wrap=h("div.rds-list");
+list.forEach(function(r){
+var card=h("div.rds-card.card.reveal-scope",{class:(r.readAt?"is-read":null),role:"button",tabindex:"0","aria-label":r.title},
+h("div.rc-top",h("span.rc-dot"),h("h3",r.title),h("span.rc-date",absDay(r.date))),
+h("div.rc-body",strip(r.html).slice(0,220)),
+h("div.rc-meta",
+h("span.rc-kind",{class:kindOf(r)},kindOf(r)==="deepdive"?"Deep dive":"Briefing"),
+(kindOf(r)==="briefing"&&isFriday(r))?h("span.rc-kind.friday","Friday"):null,
+(r.tags||[]).slice(0,3).map(function(t){ return h("span.th-tag",t); }),
+h("span",{style:"flex:1"}),
+h("span",{style:"font-size:11px;color:var(--text-4)"},r.readAt?"read":"~"+Math.max(1,Math.round(strip(r.html).split(/\s+/).length/220))+" min")),
+h("span.rc-pin",icon("pin",13)));
+if(r.pinned) card.classList.add("pinned");
+card.addEventListener("click",function(){ openReader(r); });
+card.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openReader(r); } });
+wrap.appendChild(card);
+});
+inner.appendChild(wrap);
+var total=reads().length;
+if(total>=25) inner.appendChild(h("div.rd-empty-note","Unpinned reads cap at 30 — the oldest auto-archive as new ones arrive. Pin anything you want to keep forever, or use “Save to Notes” to file it permanently."));
+}
+function markRead(r){ if(!r.readAt){ r.readAt=C.now(); ENG.touch(r); ENG.save(false); } }
+function openReader(r){
+markRead(r);
+W.modal(function(box,close){
+box.classList.add("read-modal");
+var p=W.modalParts(box,close,r.title,{ic:"book"});
+p.body.appendChild(h("div",{style:"font-size:11.5px;color:var(--text-4);margin-bottom:12px"},
+absDay(r.date)+((r.tags&&r.tags.length)?" · "+r.tags.join(" · "):"")+(r.source==="routine"?" · from your scan":"")));
+p.body.appendChild(h("div.read-view",{html:sanitize(r.html)}));
+var del=h("button.btn.btn-danger",{type:"button"},icon("trash",15),"Delete");
+del.addEventListener("click",function(){
+W.confirmMini(del,{message:"Delete this read?",confirmLabel:"Delete",place:"top-start",onConfirm:function(){
+r.deleted=true; ENG.touch(r); ENG.save(false); close(); rr();
+W.toast("Read deleted",{undo:function(){ delete r.deleted; ENG.touch(r); ENG.save(false); rr(); }});
+}});
+});
+var pin=h("button.btn.btn-secondary",{type:"button"},icon("pin",15),r.pinned?"Unpin":"Pin");
+pin.addEventListener("click",function(){ r.pinned=!r.pinned; ENG.touch(r); ENG.save(false); pin.childNodes[1].textContent=r.pinned?"Unpin":"Pin"; W.toast(r.pinned?"Pinned — exempt from the 30-read cap":"Unpinned"); });
+var toNotes=h("button.btn.btn-secondary",{type:"button"},icon("note",15),"Save to Notes");
+toNotes.addEventListener("click",function(){
+var res=ENG.applyCommand({type:"note",title:r.title,section:"Reference",html:r.html});
+if(res){ ENG.save(false); W.toast("Saved to Notes → Reference ✓"); } else W.toast("Couldn't save",true);
+});
+p.foot.appendChild(del);
+p.foot.appendChild(h("div.spacer"));
+p.foot.appendChild(toNotes);
+p.foot.appendChild(pin);
+p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:function(){ close(); rr(); }},"Done"));
+},{wide:true});
+}
+function openReadModal(id){
+var r=id?ENG.state.reads.items.filter(function(x){ return x.id===id; })[0]:null;
+var isNew=!r;
+W.modal(function(box,close){
+var p=W.modalParts(box,close,isNew?"New read":"Edit read",{ic:"book"});
+var fT=h("input.input",{type:"text",value:r?r.title:"","aria-label":"Title",placeholder:"Title",autofocus:true});
+var fTags=h("input.input",{type:"text",value:r?(r.tags||[]).join(", "):"","aria-label":"Tags",placeholder:"tags, comma-separated"});
+var fBody=h("textarea.input",{rows:"14","aria-label":"Body",placeholder:"Markdown-ish: ### headings, - bullets, **bold**"},"");
+p.body.appendChild(h("div.field",h("label","Title *"),fT));
+p.body.appendChild(h("div.field",h("label","Tags"),fTags));
+p.body.appendChild(h("div.field",h("label","Body"),fBody));
+function commit(){
+var ttl=fT.value.trim(); if(!ttl){ fT.focus(); return; }
+var tags=fTags.value.split(",").map(function(x){ return x.trim(); }).filter(Boolean);
+if(isNew){
+ENG.state.reads.items.push({ id:C.uid(),title:ttl,html:C.mdLite(fBody.value),date:C.localISO(new Date()),kind:"deepdive",tags:tags,source:"me",readAt:C.now(),pinned:false,created:C.now(),updated:C.now() });
+}else{
+r.title=ttl; r.tags=tags;
+if(fBody.value.trim()) r.html=C.mdLite(fBody.value);
+ENG.touch(r);
+}
+ENG.save(false); close(); rr();
+W.toast(isNew?"Read added ✓":"Read saved ✓");
+}
+box.addEventListener("keydown",function(e){ if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ e.preventDefault(); commit(); } });
+p.foot.appendChild(h("div.spacer"));
+p.foot.appendChild(h("button.btn.btn-ghost",{type:"button",onclick:function(){ close(); }},"Cancel"));
+p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:commit},isNew?"Add":"Save"));
+},{wide:true});
+}
+function reveal(id){
+rr();
+/* open directly */
+var r=ENG.state.reads.items.filter(function(x){ return x.id===id && !x.deleted; })[0];
+if(r) openReader(r);
+}
+W.views.reads={ render:render, newItem:function(){ openReadModal(null); }, reveal:reveal };
+})();
+</script>
+<!-- ===== END VIEW_READS ===== -->
 <!-- ===== VIEW_ASSISTANT (Builder 3 replaces stub between markers) ===== -->
 <script>
 (function(){
@@ -7840,7 +8333,7 @@ var W=window.__ws, h=W.h, $=W.$, $$=W.$$, icon=W.icon, ui=W.ui, ENG=W.eng, C=W.c
 
 var chatId=null, busy=false, revealTimer=null, ta=null, recog=null;
 var PERSONA="You are the assistant inside a VC investor's personal workspace app (weekly task tracker, notes, outreach CRM). Be concise, direct and practical. Use markdown when it helps: short ## headings, bullet lists, simple | tables |.";
-var PROTOCOL='You can act on the workspace by ending your reply with a ```json {"actions":[…]}``` code block. Supported actions: {"type":"task","task":"…","lane":"monitoring|initiatives|support|other","day":"mon|tue|wed|thu|fri","company":"…"} · {"type":"contact","name":"…","firm":"…","title":"…","region":"UK|EU|US|Other"} · {"type":"note","title":"…","content":"…"} · {"type":"complete_task","match":"part of the task title"} · {"type":"deal","company":"…","sector":"Fintech|AI|Fintech × AI|Deeptech|Other","round":"Pre-seed|Seed","amount":"£…m","investors":"…","announced":"YYYY-MM-DD","source":"url","summary":"…","why":"…"} · {"type":"thesis","title":"…","content":"…","tags":["…"]} · {"type":"pulse","title":"…","content":"…"}. Only include the block when the user asks you to add, create or complete something.';
+var PROTOCOL='You can act on the workspace by ending your reply with a ```json {"actions":[…]}``` code block. Supported actions: {"type":"task","task":"…","lane":"monitoring|initiatives|support|other","day":"mon|tue|wed|thu|fri","company":"…"} · {"type":"contact","name":"…","firm":"…","title":"…","region":"UK|EU|US|Other"} · {"type":"note","title":"…","content":"…"} · {"type":"complete_task","match":"part of the task title"} · {"type":"deal","company":"…","sector":"Fintech|AI|Fintech × AI|Deeptech|Other","round":"Pre-seed|Seed","amount":"£…m","investors":"…","announced":"YYYY-MM-DD","source":"url","summary":"…","why":"…"} · {"type":"thesis","title":"…","content":"…","tags":["…"]} · {"type":"pulse","title":"…","content":"…"} · {"type":"read","title":"…","content":"…","kind":"briefing|deepdive","tags":["…"]} · {"type":"meeting","name":"…","firm":"…","date":"YYYY-MM-DD","dealsShared":"one per line","dealsReceived":"one per line","summary":"…","notes":"…"}. Only include the block when the user asks you to add, create or complete something.';
 
 function chats(){
 return ENG.state.ai.chats.filter(function(x){ return !x.deleted; })

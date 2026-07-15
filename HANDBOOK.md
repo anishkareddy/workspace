@@ -10,11 +10,23 @@ A private workspace for a VC investor (UK VCT, invests at Series A/B):
 
 - **Week** — weekly task tracker (4 lanes, day groups, carry-forward)
 - **Notes** — notebooks → sections → pages; rich editor (tables, callouts, code, toggles, boards)
-- **Outreach** — investor-networking CRM (contacts, firms, next steps, deals shared, Excel export)
+- **Outreach** — investor-networking CRM: This week / Meetings / Contacts / Companies tabs.
+  **Single-entry model: the meeting is the source of truth.** Logging a meeting auto-creates or
+  updates the contact, stamps lastContactDate, can set the contact's next step, and the contact's
+  deal history (table column, tooltip, Excel) is DERIVED from its meetings — contact-level
+  dealsShared/dealsReceived fields are legacy-read-only (still counted, never edited via UI).
+  Contact modal = 8 essentials + collapsible "More details" + inline meeting history with a
+  prefilled "Log meeting" shortcut. One-click "Copy for Affinity" per meeting; Excel button is
+  tab-contextual (contacts vs meetings).
 - **Deal Radar** — UK+EU pre-seed/seed tracker (Fintech · AI) with three tabs:
   - *Deals* — the radar table (sector, round, amount, investors, UK-nexus tag in "why")
   - *Market pulse* — auto-computed trends board + twice-weekly pulse notes (market diary)
   - *Theses* — quality-bar investment theses
+- **Reads** — the reading room: twice-weekly (Tue+Fri) long-form briefings + deep dives written by
+  the `deep-read-briefing` routine to her "Daily VC Briefing" spec (five domains — fintech,
+  healthtech, European VC, AI/deeptech, macro — TL;DR, Worth Reading, Thesis Radar; Fridays add
+  podcast picks + weekly thesis tracker). Cards mark read on open; pin to exempt from the 30-item
+  cap; "Save to Notes" files a read permanently into Notes → Reference.
 - **Assistant** — in-app Claude chat (optional; user's own API key, never synced)
 
 ## Architecture
@@ -37,7 +49,12 @@ A private workspace for a VC investor (UK VCT, invests at Series A/B):
   `notes.notebooks[{sections[]}]`, `notes.pages[]` (order field = manual sort),
   `tracker.tasks[]`, `tracker.dayNotes{}`, `outreach.companies[]`,
   `outreach.contacts[]` (incl. `summary`, `dealsShared`, `dealsReceived`),
-  `radar.deals[]`, `radar.theses[]`, `radar.pulses[]` (capped at 60 live), `ai.chats[]`, `processedInbox[]` (capped ~500).
+  `radar.deals[]`, `radar.theses[]`, `radar.pulses[]` (capped at 60 live),
+  `reads.items[]` (briefings/deep dives; 30 live unpinned cap; `readAt`, `pinned`, `kind`),
+  `ai.chats[]`, `processedInbox[]` (capped ~500).
+- **mdLite** (`CORE.mdLite`): converts markdown-ish plain text (### headings, - bullets, **bold**,
+  links, ---) to app HTML. Used by applyCommand for note/thesis/pulse/read bodies; migrate() also
+  repairs any legacy records that stored literal "### " markdown inside paragraphs.
 
 ## The inbox contract (how anything external writes in)
 
@@ -52,13 +69,24 @@ Command types (see `applyCommand` in CORE):
 - `deal` {company, sector, round, amount, investors, announced, source, summary, why} — dedupes on company+round (enriches instead)
 - `thesis` {title, content|html, tags[]} — dedupes on title
 - `pulse` {title, content|html, date} — dedupes on title+date, cap 60 live
+- `read` / `briefing` {title, content|html, date, kind:"briefing"|"deepdive", tags[]} — dedupes on
+  title+date; cap 30 live unpinned (pinned exempt); markdown bodies rendered via mdLite
+- `meeting` {name, firm, date, kind, dealsShared, dealsReceived, summary, notes} — dedupes on
+  name+date; auto-links or creates the contact and advances its lastContactDate
 
 Scheduled routines skip `inbox.json` and instead call `window.__WS.applyCommand(cmd)` directly in a
 browser tab, then `window.__ws.eng.persistLocal(); window.__ws.eng.push();` — same contract, no token handling.
 
 ## Automations (Cowork scheduled tasks on the user's machine)
 
-- **`uk-deal-radar-scan`** — Mon + Thu 08:00 local. Unified investor radar, five sources:
+- **`uk-deal-radar-scan`** — Mon + Thu 08:00 local. Unified investor radar, built as a
+  **multi-agent workflow**: a thin orchestrator (session default model) spawns four parallel
+  SONNET gatherers via the Agent tool (Harmonic / PitchBook / press / Gmail newsletters), each
+  returning strict compact JSON; the orchestrator merges + dedupes, does watchlist/warm-path/
+  thesis-cohort enrichment, then one OPUS synthesis agent ranks deals, writes the pulse, applies
+  the thesis quality bar and drafts the digest; finally the orchestrator pushes via the browser.
+  Failure-isolated (a dead gatherer is skipped), context-isolated (700KB Harmonic dumps never
+  reach the synthesis layer). Five sources:
   1. *Harmonic* (team instance — READ-ONLY on shared assets): natural-language discovery searches;
      net-new from team saved searches (UK/EU Pre-Seed Weekly 158263, UK Recently Raised Seed 157352,
      UK High-Qual Stealth 156637, High-Traction Seed B2B SaaS 154457, Strong-Founder UK B2B 144491);
@@ -78,9 +106,21 @@ browser tab, then `window.__ws.eng.persistLocal(); window.__ws.eng.push();` — 
      (created by the routine, owned by her); runs report cohort movement (raises/headcount) as
      strengthening/flat/weakening evidence in the pulse's "Thesis check".
   Pushes deals + one pulse note (+ thesis when the quality bar is met) into the app via the browser,
-  then posts a ≤1-minute digest in chat.
+  then posts a ≤1-minute digest in chat. The pulse is holistic: alongside early-stage sections it
+  carries "Big moves" (mega-rounds, exits/M&A, fund launches — partner-level awareness) and
+  "The wider picture" (cross-sector/geopolitical/macro, investor-framed). Mega-deals stay out of
+  the deals table except rare strategic UK/EU fintech-AI growth rounds (round:"Growth" — excluded
+  from median stats automatically).
   Ad-hoc: any new chat can run "explore a thesis" interactively — natural-language search →
   gated market map → optional "(auto)" list; the Harmonic console is for visual deep-dives only.
+- **`deep-read-briefing`** — Tue + Fri 08:00 local. Multi-agent deep-reading workflow built from her
+  claude.ai "Daily VC Briefing" project spec: Sonnet gatherers (Tier-1 newsletters read in full —
+  Fintech Brainfood, Sifted, Venture Daily Digest, EUVC; Tier-2 weeklies when present — Stratechery,
+  Benedict Evans, Exponential View, The Generalist, Fintech Takes, Not Boring, The Diff, CB Insights;
+  a 5-domain web sweep; Friday podcast scout) → one Opus writer produces the full briefing (British
+  English, opinionated, five domains + TL;DR + Worth Reading + Thesis Radar, Friday podcast picks +
+  weekly thesis tracker) plus a separate 600–1,000-word deep dive on the window's strongest signal →
+  both pushed as `read` commands. Self-healing lookback from the latest read's date.
 - **`wednesday-outreach-brief`** — Wed 08:00, outreach follow-up reminder.
 - Runs are **stateless by design**: every run is a fresh session; all durable state lives in the app/Gist.
 
