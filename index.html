@@ -332,7 +332,9 @@ textarea.input{height:auto;min-height:72px;padding:8px 10px;line-height:1.5;resi
 @media(hover:hover){.sb-foot-btn:hover kbd{opacity:1}}
 /* mobile tabbar */
 #tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:90;height:calc(56px + env(safe-area-inset-bottom));padding:0 6px env(safe-area-inset-bottom);background:color-mix(in srgb,var(--bg-app) 84%,transparent);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-top:1px solid var(--border-hairline)}
-.tb-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);font-size:10.5px;font-weight:500;border-radius:var(--r-md)}
+.tb-item{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);font-size:10.5px;font-weight:500;border-radius:var(--r-md)}
+.tb-item span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:380px){.tb-item{font-size:9.5px}.tb-item svg{width:19px;height:19px}}
 .tb-item svg{width:21px;height:21px}
 .tb-item.active{color:var(--accent-text)}
 .tb-item:active{opacity:.6}
@@ -1382,6 +1384,57 @@ button.rd-hc{cursor:pointer}
 .tr-click{cursor:pointer;border-radius:var(--r-sm)}
 @media(hover:hover){.tr-click:hover{background:var(--bg-hover)}}
 .pl-head{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+/* ===== v9.6 DOSSIERS — readable record views with inline editing ===== */
+.modal.dossier{max-width:720px}
+.ds-head{display:flex;align-items:flex-start;gap:14px}
+.ds-head .ds-main{flex:1;min-width:0}
+.ds-title{font-family:var(--font-serif);font-size:23px;font-weight:650;letter-spacing:-.015em;line-height:1.22;color:var(--text-1)}
+.ds-sub{font-size:13px;color:var(--text-3);margin-top:4px}
+.ds-amount{font-size:20px;font-weight:650;letter-spacing:-.01em;color:var(--text-1);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ds-amount .r{display:block;font-size:11px;font-weight:600;color:var(--text-4);text-align:right;letter-spacing:.04em;text-transform:uppercase}
+.cp-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+.cp{padding:3.5px 11px;border-radius:999px;font-size:12px;font-weight:600;background:var(--bg-sunken);color:var(--text-3);border:1px solid transparent;transition:all var(--dur-fast)}
+@media(hover:hover){.cp:hover{border-color:var(--border-default);color:var(--text-2)}}
+.cp.on{background:color-mix(in srgb,var(--os,var(--accent)) 13%,transparent);color:var(--os,var(--accent-text));border-color:color-mix(in srgb,var(--os,var(--accent)) 38%,transparent)}
+.ds-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px 18px;margin:16px 0 4px;padding:13px 15px;background:color-mix(in srgb,var(--bg-sunken) 55%,transparent);border-radius:var(--r-lg)}
+.df .k{font-size:10.5px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--text-4)}
+.df .v{font-size:13.5px;color:var(--text-1);margin-top:3px;line-height:1.45;word-break:break-word}
+.df .v a{color:var(--accent-text)}
+.df .v input[type=date]{font:inherit;font-size:13px;background:transparent;color:var(--text-1);border:0;padding:0;cursor:pointer}
+.ds-sec{margin-top:18px}
+.ds-sec>.t{font-size:11px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.ds-sec>.t .spacer{flex:1}
+/* inline edit: formatted view ⇄ borderless editor */
+.de-view{position:relative;font-size:14.5px;line-height:1.65;color:var(--text-1);border-radius:var(--r-md);padding:10px 34px 10px 12px;background:color-mix(in srgb,var(--bg-sunken) 45%,transparent);cursor:text;min-height:40px;transition:box-shadow var(--dur-fast)}
+@media(hover:hover){.de-view:hover{box-shadow:inset 0 0 0 1px var(--border-default)}}
+.de-view.empty{color:var(--text-4);font-style:italic}
+.de-view p{margin:0 0 8px}
+.de-view p:last-child{margin-bottom:0}
+.de-view ul{margin:0 0 8px;padding-left:20px}
+.de-view ul:last-child{margin-bottom:0}
+.de-view li{margin:3px 0}
+.de-view b{font-weight:650}
+.de-view h3,.de-view h4{font-size:13.5px;font-weight:650;margin:10px 0 4px}
+.de-view a{color:var(--accent-text);text-decoration:underline;text-underline-offset:2px}
+.de-pencil{position:absolute;top:9px;right:9px;color:var(--text-4);opacity:0;transition:opacity var(--dur-fast);pointer-events:none}
+@media(hover:hover){.de-view:hover .de-pencil{opacity:.8}}
+.de-edit{width:100%;font-family:var(--font-ui);font-size:14px;line-height:1.6;color:var(--text-1);padding:10px 12px;border-radius:var(--r-md);background:var(--bg-surface);box-shadow:inset 0 0 0 1.5px var(--ring);resize:none;overflow:hidden;display:block}
+.de-hint{font-size:10.5px;color:var(--text-4);margin-top:4px;text-align:right}
+.ds-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.ds-two{grid-template-columns:1fr}}
+.nexus-chip{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:var(--ok-bg);color:var(--ok);margin-left:6px;vertical-align:middle}
+.nexus-chip.watch{background:var(--warn-bg);color:var(--warn)}
+/* meetings timeline inside contact dossier */
+.mtl-card{padding:12px 14px;border:1px solid var(--border-hairline);border-radius:var(--r-lg);margin-top:8px;background:var(--bg-surface)}
+.mtl-hd{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-3)}
+.mtl-hd .kind{padding:1px 8px;border-radius:999px;background:var(--accent-bg);color:var(--accent-text);font-weight:600;font-size:11px}
+.mtl-hd .spacer{flex:1}
+.mtl-sum{margin-top:7px;font-size:13.5px;line-height:1.6;color:var(--text-1)}
+.mtl-sum p{margin:0 0 6px}
+.mtl-deals{margin-top:7px;font-size:12.5px;color:var(--text-2);line-height:1.55}
+.ds-derived{font-size:13.5px;line-height:1.7;color:var(--text-1)}
+.ds-derived .arr{display:inline-block;width:18px;color:var(--text-4);font-weight:600}
+.ds-derived .none{color:var(--text-4);font-style:italic}
 /* outreach deals col */
 .c-deals{font-size:12px;color:var(--text-3);white-space:nowrap}
 .ot-grid{grid-template-columns:minmax(165px,1.3fr) minmax(145px,1.4fr) 134px 108px 100px 76px minmax(145px,1.1fr) 68px}
@@ -1594,6 +1647,9 @@ function migrate(s){
   }); }
   fixFlat(s.radar.pulses); fixFlat(s.radar.theses); fixFlat(s.reads.items);
   s.ai=s.ai||{chats:[]}; s.ai.chats=s.ai.chats||[];
+  /* v9.5: cap assistant chats at 40 live (oldest tombstoned) */
+  var liveChats=s.ai.chats.filter(function(x){ return !x.deleted; }).sort(function(a,b){ return (b.updated||0)-(a.updated||0); });
+  liveChats.slice(40).forEach(function(x){ x.deleted=true; x.updated=now(); });
   s.processedInbox=s.processedInbox||[];
   s.version=CORE.VERSION;
   return s;
@@ -1730,7 +1786,10 @@ function loadSettings(){
   try{ var raw=localStorage.getItem(LS_SET); if(raw) return JSON.parse(raw); }catch(e){}
   return {apiKey:"", model:"claude-sonnet-5", parseModel:"claude-haiku-4-5-20251001", gistToken:"", gistId:"", autoSync:true, useContext:true, lastSync:0};
 }
-function persistLocal(){ state.updated=C.now(); try{ localStorage.setItem(LS_STATE, JSON.stringify(state)); }catch(e){ toast("Local save failed (storage full?)", true); } }
+var _sizeWarned=false;
+function persistLocal(){ state.updated=C.now(); try{ var js=JSON.stringify(state); localStorage.setItem(LS_STATE, js);
+if(!_sizeWarned && js.length>2500000){ _sizeWarned=true; toast("Workspace data is over 2.5 MB — mostly pasted images. Settings → Data → “Slim images” frees space safely.", true); }
+}catch(e){ toast("Local save failed (storage full?)", true); } }
 function persistSettings(){ try{ localStorage.setItem(LS_SET, JSON.stringify(settings)); }catch(e){} }
 function save(reRender){ persistLocal(); pushSoon(); if(reRender!==false) rerender(); }
 function touch(rec){ rec.updated=C.now(); return rec; }
@@ -2066,7 +2125,53 @@ if((tag==="span"||tag==="font") && n.attributes.length===0 && n.parentNode){ var
 Array.prototype.forEach.call(d.querySelectorAll("table"),function(t){ t.classList.add("on-tbl"); });
 return d.innerHTML;
 }
-function downscale(dataUrl,cb){ var img=new Image(); img.onload=function(){ var max=1400,w=img.width,hh=img.height; if(w>max){ hh=Math.round(hh*max/w); w=max; } var c=document.createElement("canvas"); c.width=w;c.height=hh; try{ c.getContext("2d").drawImage(img,0,0,w,hh); cb(c.toDataURL("image/jpeg",0.85)); }catch(e){ cb(dataUrl); } }; img.onerror=function(){ cb(dataUrl); }; img.src=dataUrl; }
+function downscale(dataUrl,cb){ var img=new Image(); img.onload=function(){ var max=1200,w=img.width,hh=img.height; if(w>max){ hh=Math.round(hh*max/w); w=max; } var c=document.createElement("canvas"); c.width=w;c.height=hh; try{ c.getContext("2d").drawImage(img,0,0,w,hh); cb(c.toDataURL("image/jpeg",0.8)); }catch(e){ cb(dataUrl); } }; img.onerror=function(){ cb(dataUrl); }; img.src=dataUrl; }
+/* v9.5 — re-compress every embedded image across all pages (the storage saver).
+   Safe: skips anything that fails or doesn't shrink meaningfully. Returns a Promise with a report. */
+function slimImages(){
+return new Promise(function(resolve){
+var pages=(state.notes.pages||[]).filter(function(p){ return !p.deleted && /<img[^>]+src="data:image/.test(p.html||""); });
+var report={pages:0,images:0,beforeKB:0,afterKB:0};
+var queue=[];
+pages.forEach(function(p){ queue.push(p); });
+function nextPage(){
+var p=queue.shift();
+if(!p){ if(report.images){ persistLocal(); pushSoon(); } resolve(report); return; }
+var div=document.createElement("div"); div.innerHTML=p.html;
+var imgs=Array.prototype.slice.call(div.querySelectorAll('img[src^="data:image"]'));
+var changed=false, pending=imgs.length;
+if(!pending){ nextPage(); return; }
+imgs.forEach(function(el){
+var src=el.getAttribute("src")||"";
+var before=src.length;
+if(before<60000){ if(--pending===0) finish(); return; } /* skip small images */
+var img=new Image();
+img.onload=function(){
+try{
+var max=1100, w=img.width, hh=img.height;
+if(w>max){ hh=Math.round(hh*max/w); w=max; }
+var cv=document.createElement("canvas"); cv.width=w; cv.height=hh;
+cv.getContext("2d").drawImage(img,0,0,w,hh);
+var out=cv.toDataURL("image/jpeg",0.72);
+if(out.length<before*0.9){
+el.setAttribute("src",out);
+report.images++; report.beforeKB+=Math.round(before/1024); report.afterKB+=Math.round(out.length/1024);
+changed=true;
+}
+}catch(e){}
+if(--pending===0) finish();
+};
+img.onerror=function(){ if(--pending===0) finish(); };
+img.src=src;
+});
+function finish(){
+if(changed){ p.html=div.innerHTML; p.updated=now(); report.pages++; }
+nextPage();
+}
+}
+nextPage();
+});
+}
 
 /* ---- boot (e4 shape; no bundled-notes auto-import by user choice; ⌘K lives in SHELL router) ---- */
 function boot(){
@@ -2104,7 +2209,7 @@ ui:ui,
 loadLocal:loadLocal, loadSettings:loadSettings, persistLocal:persistLocal, persistSettings:persistSettings,
 save:save, touch:touch, setSync:setSync, pull:pull, push:push, pushSoon:pushSoon, applyRemote:applyRemote,
 syncNow:syncNow, createGist:createGist, haveAI:haveAI, callClaude:callClaude, workspaceContext:workspaceContext,
-applyCommand:applyCommand, processInbox:processInbox, cleanStyle:cleanStyle, cleanPaste:cleanPaste, normalizeWeights:normalizeWeights, downscale:downscale,
+applyCommand:applyCommand, processInbox:processInbox, cleanStyle:cleanStyle, cleanPaste:cleanPaste, normalizeWeights:normalizeWeights, downscale:downscale, slimImages:slimImages,
 boot:boot, LS_STATE:LS_STATE, LS_SET:LS_SET, GIST_FILE:GIST_FILE
 };
 W.core=CORE; W.eng=ENG; W.ui=ui;
@@ -2213,6 +2318,70 @@ el.addEventListener("mouseleave",function(){ deadline=Date.now()+ttl; clearTimeo
 function dismiss(){ if(gone) return; gone=true; clearTimeout(timer); el.classList.add("out"); setTimeout(function(){ el.remove(); },200); }
 return dismiss;
 }
+
+/* ---- v9.6 dossier primitives: inline edit · chip picker · sections ---- */
+function deEdit(o){ /* {get,set,ph,md,minRows,single} — formatted view ⇄ auto-sizing editor */
+var wrap=h("div");
+function render(){
+wrap.innerHTML="";
+var val=String(o.get()||"");
+var view=h("div.de-view",{class:val?null:"empty",role:"button",tabindex:"0","aria-label":o.ph||"Edit"});
+if(val){ if(o.md&&W.core.mdLite) view.innerHTML=W.core.mdLite(val); else view.textContent=val; }
+else view.textContent=o.ph||"Click to add…";
+view.appendChild(h("span.de-pencil",icon("pencil",12)));
+function start(){
+var ta=h("textarea.de-edit",{rows:String(o.minRows||(o.single?1:2)),"aria-label":o.ph||"Edit"});
+ta.value=val;
+function size(){ ta.style.height="auto"; ta.style.height=Math.min(440,Math.max(o.single?38:56,ta.scrollHeight+2))+"px"; }
+ta.addEventListener("input",size);
+ta.addEventListener("keydown",function(e){
+if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){ e.preventDefault(); ta.blur(); return; }
+if(o.single&&e.key==="Enter"){ e.preventDefault(); ta.blur(); return; }
+if(e.key==="Escape"){ e.stopPropagation(); ta.value=val; ta.blur(); }
+});
+ta.addEventListener("blur",function(){
+var v=ta.value.replace(/\s+$/,"");
+if(v!==val){ o.set(v); }
+render();
+});
+var hint=h("div.de-hint",o.single?"↵ save · esc cancel":"⌘↵ save · esc cancel"+(o.md?" · **bold** and - bullets work":""));
+wrap.innerHTML=""; wrap.appendChild(ta); wrap.appendChild(hint);
+ta.focus(); size();
+try{ ta.setSelectionRange(ta.value.length,ta.value.length); }catch(e){}
+}
+view.addEventListener("click",start);
+view.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); start(); } });
+wrap.appendChild(view);
+}
+render();
+return wrap;
+}
+function deChips(o){ /* {values,colors:{v:cssToken},get,set} — one-click status picker */
+var row=h("div.cp-row");
+function paint(){
+row.innerHTML="";
+o.values.forEach(function(v){
+var on=o.get()===v;
+var b=h("button.cp",{type:"button",class:on?"on":null,style:"--os:"+((o.colors||{})[v]||"var(--text-3)"),"aria-pressed":String(on)},v);
+b.addEventListener("click",function(){ o.set(v); paint(); });
+row.appendChild(b);
+});
+}
+paint();
+return row;
+}
+function deSec(title,node,extra){
+var t=h("div.t",title);
+if(extra){ t.appendChild(h("span.spacer")); t.appendChild(extra); }
+return h("div.ds-sec",t,node);
+}
+function deFact(k,v){ return h("div.df",h("div.k",k),h("div.v",v)); }
+function deDate(o){ /* inline date input {get,set} */
+var inp=h("input",{type:"date",value:o.get()||"","aria-label":o.label||"Date"});
+inp.addEventListener("change",function(){ o.set(inp.value||""); });
+return inp;
+}
+W.de={edit:deEdit,chips:deChips,sec:deSec,fact:deFact,date:deDate};
 
 /* ---- popover manager — origin-aware scale from anchor, viewport-clamped ---- */
 function openPop(anchor,content,opts){
@@ -2707,6 +2876,7 @@ items.push({group:"Actions",label:"New task",ic:"plus",kbd:"N",id:"a:task",run:f
 items.push({group:"Actions",label:"New page",ic:"note",id:"a:page",run:function(){ W.shell.nav("notes"); if(W.views.notes.newItem) W.views.notes.newItem(); }});
 items.push({group:"Actions",label:"New contact",ic:"users",id:"a:contact",run:function(){ W.shell.nav("outreach"); if(W.views.outreach.newItem) W.views.outreach.newItem(); }});
 items.push({group:"Actions",label:"New deal (radar)",ic:"radar",id:"a:deal",run:function(){ W.shell.nav("radar"); if(W.views.radar&&W.views.radar.newItem) W.views.radar.newItem(); }});
+items.push({group:"Actions",label:"Log a meeting",ic:"calendar",id:"a:meet",run:function(){ W.shell.nav("outreach"); if(W.views.outreach.logMeeting) W.views.outreach.logMeeting(); }});
 items.push({group:"Actions",label:"Export outreach to Excel",ic:"download",id:"a:orx",run:function(){ W.shell.nav("outreach"); setTimeout(function(){ var b=document.querySelector('.or-head [aria-label="Download as Excel"]'); if(b) b.click(); },50); }});
 items.push({group:"Actions",label:"Copy weekly brief",ic:"copy",id:"a:brief",run:function(){ if(W.views.outreach && W.views.outreach.copyBrief) W.views.outreach.copyBrief(); }});
 items.push({group:"Actions",label:"Toggle dark mode",ic:(W.theme.resolved()==="dark"?"sun":"moon"),id:"a:theme",run:function(){ W.theme.apply(W.theme.resolved()==="dark"?"light":"dark"); }});
@@ -2753,8 +2923,15 @@ items.push({group:"Reads",label:r.title,sub:(r.date||"")+(r.readAt?"":" · unrea
 W.shell.nav("reads"); if(W.views.reads&&W.views.reads.reveal) W.views.reads.reveal(r.id);
 }});
 });
+(((st.outreach||{}).meetings)||[]).filter(function(m){return !m.deleted;}).forEach(function(m){
+var sc=Math.max(fuzzy(q,m.name),fuzzy(q,m.firm||"")-2,fuzzy(q,(m.summary||"").slice(0,80))-4);
+if(sc<0) return;
+items.push({group:"Meetings",label:m.name+(m.firm?" · "+m.firm:""),sub:(m.kind||"Call")+" · "+(m.date||""),ic:"calendar",score:sc,id:"m:"+m.id,run:function(){
+W.shell.nav("outreach"); if(W.views.outreach.revealMeetings) W.views.outreach.revealMeetings();
+}});
+});
 items.sort(function(a,b){ return b.score-a.score; });
-var byGroup={Notes:0,Tasks:0,Contacts:0,Deals:0,Reads:0};
+var byGroup={Notes:0,Tasks:0,Contacts:0,Deals:0,Reads:0,Meetings:0};
 return items.filter(function(it){ byGroup[it.group]++; return byGroup[it.group]<=5; });
 }
 function openPalette(){
@@ -6996,9 +7173,9 @@ c.nextStep?h("span.ct-step",h("span.arr","→ "),c.nextStep):h("span.ct-step.non
 dateEl),
 h("div.ct-acts",
 (c.nextStep||c.nextStepDate)?h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Done next step","data-tip":"Done — clears step, stamps today",onclick:function(e){ e.stopPropagation(); doneStep(c); }},icon("check",15)):null,
-h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit contact","data-tip":"Edit",onclick:function(e){ e.stopPropagation(); openContactModal(c.id); }},icon("pencil",15))));
-row.addEventListener("click",function(){ openContactModal(c.id); });
-row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openContactModal(c.id); } });
+h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit contact","data-tip":"Edit fields",onclick:function(e){ e.stopPropagation(); openContactModal(c.id); }},icon("pencil",15))));
+row.addEventListener("click",function(){ openContactDossier(c); });
+row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openContactDossier(c); } });
 return row;
 }
 function doneStep(c){
@@ -7103,10 +7280,10 @@ c.nextStep?h("span.txt","→ "+c.nextStep):h("span.txt",{style:"color:var(--text
 c.nextStepDate?h("span.dt.tnum",{class:late?"late":null,title:absDay(c.nextStepDate)},relDay(c.nextStepDate)):null):
 h("span",{style:"color:var(--text-4)"},"—")),
 h("div.ot-c.c-acts",
-h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit contact","data-tip":"Edit",onclick:function(e){ e.stopPropagation(); openContactModal(c.id); }},icon("pencil",15)),
+h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit contact","data-tip":"Edit fields",onclick:function(e){ e.stopPropagation(); openContactModal(c.id); }},icon("pencil",15)),
 h("button.icon-btn.danger.hover-reveal",{type:"button","aria-label":"Delete contact","data-tip":"Delete",onclick:function(e){ e.stopPropagation(); deleteContact(c); }},icon("trash",15))));
-row.addEventListener("click",function(){ openContactModal(c.id); });
-row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openContactModal(c.id); } });
+row.addEventListener("click",function(){ openContactDossier(c); });
+row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openContactDossier(c); } });
 return row;
 }
 function deleteContact(c){
@@ -7200,10 +7377,10 @@ h("div.ot-c.mt-deals",dr.length?dr.slice(0,3).map(function(x){ return h("div.tru
 h("div.ot-c.mt-sum",(m.summary||"—").slice(0,160)),
 h("div.ot-c.c-acts",
 h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Copy for Affinity","data-tip":"Copy Affinity summary",onclick:function(e){ e.stopPropagation(); copyText(affinityText(m)); W.toast("Affinity summary copied ✓"); }},icon("copy",15)),
-h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit meeting","data-tip":"Edit",onclick:function(e){ e.stopPropagation(); openMeetingModal(m.id); }},icon("pencil",15)),
+h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit meeting","data-tip":"Edit fields",onclick:function(e){ e.stopPropagation(); openMeetingModal(m.id); }},icon("pencil",15)),
 h("button.icon-btn.danger.hover-reveal",{type:"button","aria-label":"Delete meeting","data-tip":"Delete",onclick:function(e){ e.stopPropagation(); deleteMeeting(m); }},icon("trash",15))));
-row.addEventListener("click",function(){ openMeetingModal(m.id); });
-row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openMeetingModal(m.id); } });
+row.addEventListener("click",function(){ openMeetingDossier(m); });
+row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openMeetingDossier(m); } });
 return row;
 }
 function deleteMeeting(m){
@@ -7480,7 +7657,7 @@ h("button.btn.btn-secondary.btn-sm",{type:"button",onclick:function(){ close(); 
 ms.slice(0,3).forEach(function(m){
 var row=h("button.menu-item",{type:"button",style:"width:100%"},icon("calendar",14),
 h("span",{style:"flex:1;min-width:0;text-align:left"},(m.kind||"Call")+" · "+relDay(m.date)+(m.summary?" — "+m.summary.slice(0,60):"")));
-row.addEventListener("click",function(){ close(); openMeetingModal(m.id); });
+row.addEventListener("click",function(){ close(); openMeetingDossier(m); });
 mh.appendChild(row);
 });
 if(!ms.length) mh.appendChild(h("div",{style:"font-size:12px;color:var(--text-4)"},"No meetings logged yet — log one and the deal history builds itself."));
@@ -7567,21 +7744,123 @@ p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:commit},isNew?"
 });
 }
 
+/* ---- v9.6 contact dossier: the readable profile ---- */
+function openContactDossier(c){
+W.modal(function(box,close){
+box.classList.add("dossier");
+var p=W.modalParts(box,close,"",{});
+function save(){ ENG.touch(c); ENG.save(false); }
+var comps=(c.companyIds||[]).map(companyById).filter(Boolean).map(function(co){ return co.name; });
+p.body.appendChild(h("div.ds-head",
+avatar(c),
+h("div.ds-main",
+h("div.ds-title",c.name),
+h("div.ds-sub",[c.firm,c.title].filter(Boolean).join(" · ")||"—",
+comps.length?h("span",{style:"color:var(--text-4)"}," · "+comps.join(", ")):null,
+c.region?h("span.nexus-chip",c.region):null))));
+p.body.appendChild(W.de.chips({values:C.OUTREACH_STATUS,colors:OS_TOK,
+get:function(){ return c.status||"New"; },
+set:function(v){ c.status=v; save(); }}));
+p.body.appendChild(h("div.ds-facts",
+W.de.fact("Last contact",W.de.date({label:"Last contact",get:function(){ return c.lastContactDate||""; },set:function(v){ c.lastContactDate=v; save(); }})),
+W.de.fact("Next step date",W.de.date({label:"Next step date",get:function(){ return c.nextStepDate||""; },set:function(v){ c.nextStepDate=v; save(); }})),
+W.de.fact("Email",c.email?h("a",{href:"mailto:"+c.email},c.email):h("span",{style:"color:var(--text-4)"},"—")),
+W.de.fact("LinkedIn",c.linkedinUrl?h("a",{href:c.linkedinUrl,target:"_blank",rel:"noopener"},"profile ↗"):h("span",{style:"color:var(--text-4)"},"—"))));
+p.body.appendChild(W.de.sec("Next step",W.de.edit({single:true,ph:"What happens next — drives your This-week view",
+get:function(){ return c.nextStep||""; },set:function(v){ c.nextStep=v; save(); }})));
+p.body.appendChild(W.de.sec("Summary",W.de.edit({md:true,ph:"Who they are + state of the relationship",
+get:function(){ return c.summary||""; },set:function(v){ c.summary=v; save(); }})));
+/* derived deal history */
+var dd=dealsForContact(c);
+var dl=h("div.ds-derived");
+if(!dd.out.length&&!dd.inn.length) dl.appendChild(h("div.none","No deals exchanged yet — they build automatically from logged meetings."));
+dd.out.forEach(function(x){ dl.appendChild(h("div",h("span.arr","→"),x)); });
+dd.inn.forEach(function(x){ dl.appendChild(h("div",h("span.arr","←"),x)); });
+p.body.appendChild(W.de.sec("Deals exchanged ("+dd.out.length+" ⇄ "+dd.inn.length+")",dl));
+/* meetings timeline */
+var ms=meetingsFor(c);
+var tl=h("div");
+ms.forEach(function(m){
+var card=h("div.mtl-card",
+h("div.mtl-hd",
+h("span.kind",m.kind||"Call"),
+h("span",{title:m.date},relDay(m.date)),
+h("span.spacer"),
+h("button.icon-btn",{type:"button","aria-label":"Copy for Affinity","data-tip":"Copy Affinity summary",onclick:function(e){ e.stopPropagation(); copyText(affinityText(m)); W.toast("Affinity summary copied ✓"); }},icon("copy",14)),
+h("button.icon-btn",{type:"button","aria-label":"Open meeting",onclick:function(e){ e.stopPropagation(); close(); openMeetingDossier(m); }},icon("chevron-r",14))),
+m.summary?h("div.mtl-sum",{html:C.mdLite(m.summary)}):null,
+(mLines(m.dealsShared).length||mLines(m.dealsReceived).length)?
+h("div.mtl-deals",mLines(m.dealsShared).map(function(x){ return h("div","→ "+x); }),mLines(m.dealsReceived).map(function(x){ return h("div","← "+x); })):null);
+tl.appendChild(card);
+});
+if(!ms.length) tl.appendChild(h("div.ds-derived",h("div.none","No meetings yet.")));
+var logBtn=h("button.btn.btn-secondary.btn-sm",{type:"button"},icon("calendar",13),"Log meeting");
+logBtn.addEventListener("click",function(){ close(); openMeetingModal(null,{name:c.name,firm:c.firm}); });
+p.body.appendChild(W.de.sec("Meetings ("+ms.length+")",tl,logBtn));
+p.body.appendChild(W.de.sec("Notes",W.de.edit({md:true,minRows:3,ph:"Context, warm paths, anything useful later",
+get:function(){ return c.notes||""; },set:function(v){ c.notes=v; save(); }})));
+var del=h("button.btn.btn-danger",{type:"button"},icon("trash",15),"Delete");
+del.addEventListener("click",function(){
+W.confirmMini(del,{message:"Delete "+c.name+"?",confirmLabel:"Delete",place:"top-start",onConfirm:function(){ close(); deleteContact(c); }});
+});
+p.foot.appendChild(del);
+p.foot.appendChild(h("div.spacer"));
+p.foot.appendChild(h("button.btn.btn-secondary",{type:"button","data-tip":"All fields at once",onclick:function(){ close(); openContactModal(c.id); }},icon("pencil",15),"Edit fields"));
+p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:function(){ close(); rr(); }},"Done"));
+},{wide:true});
+}
+/* ---- v9.6 meeting dossier ---- */
+function openMeetingDossier(m){
+W.modal(function(box,close){
+box.classList.add("dossier");
+var p=W.modalParts(box,close,"",{});
+function save(){ ENG.touch(m); ENG.save(false); }
+p.body.appendChild(h("div.ds-head",
+h("div.ds-main",
+h("div.ds-title",(m.kind||"Call")+" with "+m.name),
+h("div.ds-sub",(m.firm||"—")+" · "+absDay(m.date)))));
+p.body.appendChild(W.de.sec("Summary (Affinity-ready)",W.de.edit({md:true,minRows:3,ph:"Fund facts, thesis, their background, chemistry…",
+get:function(){ return m.summary||""; },set:function(v){ m.summary=v; save(); }})));
+p.body.appendChild(h("div.ds-two",
+W.de.sec("Deals I shared",W.de.edit({md:false,minRows:3,ph:"One per line",
+get:function(){ return m.dealsShared||""; },set:function(v){ m.dealsShared=v; save(); }})),
+W.de.sec("Deals they shared",W.de.edit({md:false,minRows:3,ph:"One per line",
+get:function(){ return m.dealsReceived||""; },set:function(v){ m.dealsReceived=v; save(); }}))));
+p.body.appendChild(W.de.sec("Full notes",W.de.edit({md:true,minRows:3,ph:"Raw notes, follow-ups",
+get:function(){ return m.notes||""; },set:function(v){ m.notes=v; save(); }})));
+var del=h("button.btn.btn-danger",{type:"button"},icon("trash",15),"Delete");
+del.addEventListener("click",function(){
+W.confirmMini(del,{message:"Delete this meeting?",confirmLabel:"Delete",place:"top-start",onConfirm:function(){ close(); deleteMeeting(m); }});
+});
+var aff=h("button.btn.btn-ink",{type:"button"},icon("copy",15),"Copy for Affinity");
+aff.addEventListener("click",function(){ copyText(affinityText(m)); W.toast("Affinity summary copied ✓"); });
+var openC=h("button.btn.btn-secondary",{type:"button"},icon("users",15),"Contact");
+openC.addEventListener("click",function(){
+var c=contacts().filter(function(x){ return x.id===m.contactId || x.name.toLowerCase()===m.name.toLowerCase(); })[0];
+if(c){ close(); openContactDossier(c); } else W.toast("No linked contact",true);
+});
+p.foot.appendChild(del);
+p.foot.appendChild(h("div.spacer"));
+p.foot.appendChild(openC);
+p.foot.appendChild(h("button.btn.btn-secondary",{type:"button","data-tip":"Date, kind, name — all fields",onclick:function(){ close(); openMeetingModal(m.id); }},icon("pencil",15),"Edit fields"));
+p.foot.appendChild(aff);
+p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:function(){ close(); rr(); }},"Done"));
+},{wide:true});
+}
+
 /* ---- reveal (palette jump) ---- */
 function reveal(contactId){
 tab="contacts"; fQ=""; fStatus=""; fRegion="";
 rr();
-var row=$('.ot-row[data-id="'+contactId+'"]');
-if(row){
-if(row.scrollIntoView) row.scrollIntoView({block:"center"});
-row.classList.add("flash");
-setTimeout(function(){ row.classList.remove("flash"); },1500);
-}
+var c=contacts().filter(function(x){ return x.id===contactId; })[0];
+if(c) openContactDossier(c);
 }
 
 W.views.outreach={
 render:render,
 newItem:function(){ openContactModal(null); },
+logMeeting:function(defaults){ openMeetingModal(null,defaults); },
+revealMeetings:function(){ tab="meetings"; rr(); },
 reveal:reveal,
 copyBrief:copyBrief,
 brief:briefText,
@@ -7972,9 +8251,9 @@ h("div",h("span.rd-st",{style:"--os:"+(DS_TOK[d.status||"New"]||"var(--text-4)")
 h("div.rd-acts",
 d.source?h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Open source","data-tip":"Source",onclick:function(e){ e.stopPropagation(); try{ window.open(d.source,"_blank","noopener"); }catch(err){} }},icon("external",14)):null,
 h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Watch",class:d.status==="Watching"?"pinned":null,"data-tip":d.status==="Watching"?"Stop watching":"Watch",onclick:function(e){ e.stopPropagation(); d.status=d.status==="Watching"?"New":"Watching"; ENG.touch(d); ENG.save(false); rr(); }},icon("star",14)),
-h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit deal","data-tip":"Edit",onclick:function(e){ e.stopPropagation(); openDealModal(d.id); }},icon("pencil",14))));
-row.addEventListener("click",function(e){ if(e.target.closest("button")) return; openDealModal(d.id); });
-row.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); openDealModal(d.id); } });
+h("button.icon-btn.hover-reveal",{type:"button","aria-label":"Edit deal","data-tip":"Edit fields",onclick:function(e){ e.stopPropagation(); openDealModal(d.id); }},icon("pencil",14))));
+row.addEventListener("click",function(e){ if(e.target.closest("button")) return; openDealDossier(d); });
+row.addEventListener("keydown",function(e){ if(e.key==="Enter"&&e.target===row){ e.preventDefault(); openDealDossier(d); } });
 return row;
 }
 function deleteDeal(d){
@@ -8044,6 +8323,66 @@ p.foot.appendChild(del);
 p.foot.appendChild(h("div.spacer"));
 p.foot.appendChild(h("button.btn.btn-ghost",{type:"button",onclick:function(){ close(); }},"Cancel"));
 p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:commit},isNew?"Add deal":"Save"));
+},{wide:true});
+}
+/* ---- v9.6 deal dossier: the readable record view ---- */
+function splitNexus(why){
+var m=/^(.*?)\s*\[([^\]]+)\]\s*$/.exec(String(why||""));
+if(m) return {text:m[1],tag:m[2]};
+return {text:String(why||""),tag:null};
+}
+function openDealDossier(d){
+var seq=filtered(), idx=seq.indexOf(d);
+W.modal(function(box,close){
+box.classList.add("dossier");
+var p=W.modalParts(box,close,"",{});
+function save(){ ENG.touch(d); ENG.save(false); }
+function go(dir){
+var t=seq[idx+dir];
+if(!t){ W.toast(dir<0?"First deal in view":"Last deal in view"); return; }
+close(); rr(); openDealDossier(t);
+}
+box.addEventListener("keydown",function(e){
+if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName||"")) return;
+if(e.key==="ArrowLeft"){ e.preventDefault(); go(-1); }
+if(e.key==="ArrowRight"){ e.preventDefault(); go(1); }
+});
+var nx=splitNexus(d.why);
+var head=h("div.ds-head",
+h("div.ds-main",
+h("div.ds-title",d.company),
+h("div.ds-sub",
+h("span.rd-sec",{class:secClass(d.sector)},d.sector||"—"),
+nx.tag?h("span.nexus-chip",{class:/no UK/i.test(nx.tag)?"watch":null},nx.tag):null)),
+h("div.ds-amount",(d.amount||"—"),h("span.r",d.round||"")));
+p.body.appendChild(head);
+p.body.appendChild(W.de.chips({values:DSTATUS,colors:DS_TOK,
+get:function(){ return d.status||"New"; },
+set:function(v){ d.status=v; save(); }}));
+p.body.appendChild(h("div.ds-facts",
+W.de.fact("Announced",W.de.date({label:"Announced",get:function(){ return d.announced||""; },set:function(v){ d.announced=v; save(); }})),
+W.de.fact("HQ",W.de.edit({single:true,ph:"City, Country",get:function(){ return d.hq||""; },set:function(v){ d.hq=v; save(); }})),
+W.de.fact("Source",d.source?h("a",{href:d.source,target:"_blank",rel:"noopener"},(function(){ try{ return new URL(d.source).hostname.replace(/^www\./,""); }catch(e){ return "link"; } })()):h("span",{style:"color:var(--text-4)"},"—"))));
+p.body.appendChild(W.de.sec("Investors",W.de.edit({single:true,ph:"Lead (lead), Others…",get:function(){ return d.investors||""; },set:function(v){ d.investors=v; save(); }})));
+p.body.appendChild(W.de.sec("What they do",W.de.edit({md:true,ph:"One or two lines on the product",get:function(){ return d.summary||""; },set:function(v){ d.summary=v; save(); }})));
+p.body.appendChild(W.de.sec("Why it matters",W.de.edit({md:true,ph:"The signal — team, market, timing",
+get:function(){ return splitNexus(d.why).text; },
+set:function(v){ var t=splitNexus(d.why).tag; d.why=v+(t?" ["+t+"]":""); save(); }})));
+p.body.appendChild(W.de.sec("My notes",W.de.edit({md:true,minRows:3,ph:"Your running view — people met, questions, follow-ups. **bold** and - bullets render.",
+get:function(){ return d.myNotes||""; },set:function(v){ d.myNotes=v; save(); }})));
+var del=h("button.btn.btn-danger",{type:"button"},icon("trash",15),"Delete");
+del.addEventListener("click",function(){
+W.confirmMini(del,{message:"Remove "+d.company+"?",confirmLabel:"Remove",place:"top-start",onConfirm:function(){ close(); deleteDeal(d); }});
+});
+var watch=h("button.btn.btn-secondary",{type:"button"},icon("star",15),d.status==="Watching"?"Unwatch":"Watch");
+watch.addEventListener("click",function(){ d.status=d.status==="Watching"?"New":"Watching"; save(); close(); rr(); openDealDossier(d); });
+p.foot.appendChild(del);
+p.foot.appendChild(h("div.spacer"));
+p.foot.appendChild(h("button.icon-btn",{type:"button","aria-label":"Previous deal","data-tip":"Previous (←)",onclick:function(){ go(-1); }},icon("chevron-l",15)));
+p.foot.appendChild(h("span",{style:"font-size:11.5px;color:var(--text-4)"},(idx+1)+" / "+seq.length));
+p.foot.appendChild(h("button.icon-btn",{type:"button","aria-label":"Next deal","data-tip":"Next (→)",onclick:function(){ go(1); }},icon("chevron-r",15)));
+p.foot.appendChild(watch);
+p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:function(){ close(); rr(); }},"Done"));
 },{wide:true});
 }
 function exportDeals(){
@@ -8133,12 +8472,8 @@ p.foot.appendChild(h("button.btn.btn-ink",{type:"button",onclick:commit},isNew?"
 function reveal(id){
 tab="deals"; q=""; fSec=""; fRound=""; fSt="";
 rr();
-var row=$('.rd-row[data-id="'+id+'"]');
-if(row){
-if(row.scrollIntoView) row.scrollIntoView({block:"center"});
-row.classList.add("flash");
-setTimeout(function(){ row.classList.remove("flash"); },1500);
-}
+var d=deals().filter(function(x){ return x.id===id; })[0];
+if(d) openDealDossier(d);
 }
 W.views.radar={
 render:render,
@@ -8258,11 +8593,25 @@ if(total>=25) inner.appendChild(h("div.rd-empty-note","Unpinned reads cap at 30 
 function markRead(r){ if(!r.readAt){ r.readAt=C.now(); ENG.touch(r); ENG.save(false); } }
 function openReader(r){
 markRead(r);
+var seq=filtered(), idx=seq.indexOf(r);
 W.modal(function(box,close){
 box.classList.add("read-modal");
 var p=W.modalParts(box,close,r.title,{ic:"book"});
-p.body.appendChild(h("div",{style:"font-size:11.5px;color:var(--text-4);margin-bottom:12px"},
-absDay(r.date)+((r.tags&&r.tags.length)?" · "+r.tags.join(" · "):"")+(r.source==="routine"?" · from your scan":"")));
+function go(dir){
+var target=seq[idx+dir];
+if(!target){ W.toast(dir<0?"Newest read":"Oldest read"); return; }
+close(); openReader(target);
+}
+box.addEventListener("keydown",function(e){
+if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName||"")) return;
+if(e.key==="ArrowLeft"){ e.preventDefault(); go(-1); }
+if(e.key==="ArrowRight"){ e.preventDefault(); go(1); }
+});
+p.body.appendChild(h("div",{style:"display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-4);margin-bottom:12px"},
+h("span",{style:"flex:1"},absDay(r.date)+((r.tags&&r.tags.length)?" · "+r.tags.join(" · "):"")+(r.source==="routine"?" · from your scan":"")),
+h("button.icon-btn",{type:"button","aria-label":"Newer read","data-tip":"Newer (←)",onclick:function(){ go(-1); }},icon("chevron-l",15)),
+h("span.tnum",(idx+1)+" / "+seq.length),
+h("button.icon-btn",{type:"button","aria-label":"Older read","data-tip":"Older (→)",onclick:function(){ go(1); }},icon("chevron-r",15))));
 p.body.appendChild(h("div.read-view",{html:sanitize(r.html)}));
 var del=h("button.btn.btn-danger",{type:"button"},icon("trash",15),"Delete");
 del.addEventListener("click",function(){
@@ -8407,6 +8756,11 @@ if(t==="task") return (cmd.task||cmd.title)?('task “'+(cmd.task||cmd.title)+'�
 if(t==="contact") return cmd.name?('contact “'+cmd.name+'”'):null;
 if(t==="note") return 'note “'+(cmd.title||cmd.name||"Untitled")+'”';
 if(t==="complete_task"||t==="complete") return (cmd.match||cmd.task)?('completed “'+(cmd.match||cmd.task)+'”'):null;
+if(t==="deal") return cmd.company?('deal “'+cmd.company+'”'):null;
+if(t==="thesis") return cmd.title?('thesis “'+cmd.title+'”'):null;
+if(t==="pulse") return 'pulse “'+(cmd.title||"Market pulse")+'”';
+if(t==="read"||t==="briefing") return cmd.title?('read “'+cmd.title+'”'):null;
+if(t==="meeting") return cmd.name?('meeting “'+cmd.name+'”'):null;
 return null;
 }
 function actCard(a){
@@ -8854,9 +9208,26 @@ place:"top-start",
 onConfirm:openWipeModal
 });
 });
+var slimBtn=h("button.btn.btn-secondary",{type:"button","data-tip":"Re-compress pasted images across all notes — frees a lot of space, keeps them looking fine"},icon("image",15),h("span","Slim images"));
+slimBtn.addEventListener("click",function(){
+W.confirmMini(slimBtn,{
+message:"Re-compress all pasted images?",
+sub:"Images across your notes get resized to ≤1100px and recompressed. They'll still look good on screen, but full-size originals aren't kept — export a JSON backup first if unsure.",
+confirmLabel:"Slim images",danger:false,place:"top-start",
+onConfirm:function(){
+slimBtn.disabled=true; var sp=slimBtn.querySelector("span"); if(sp) sp.textContent="Slimming…";
+ENG.slimImages().then(function(rep){
+slimBtn.disabled=false; if(sp) sp.textContent="Slim images";
+if(!rep.images){ W.toast("No large images found — nothing to slim"); return; }
+W.toast("Slimmed "+rep.images+" image"+(rep.images===1?"":"s")+" across "+rep.pages+" page"+(rep.pages===1?"":"s")+" — "+rep.beforeKB+" KB → "+rep.afterKB+" KB ✓");
+if(W.render) W.render();
+});
+}});
+});
 return card("database","Data",[
 h("div.set-row",
 h("button.btn.btn-secondary",{type:"button",onclick:exportNow},icon("download",15),"Export JSON"),
+slimBtn,
 h("span.set-usage.tnum","Local data: "+usageKB()+" KB")),
 drop,file,
 h("div.set-danger",
@@ -8886,7 +9257,7 @@ p.foot.appendChild(go);
 }
 function aboutCard(){
 return card("info","About",[
-h("div.set-about-row",h("span.v","Workspace v8"),h("span.t3","·"),h("span","Canvas")),
+h("div.set-about-row",h("span.v","Workspace v9.5"),h("span.t3","·"),h("span","Radar · Reads · Meetings")),
 h("div.set-row",
 h("button.set-link",{type:"button",onclick:function(){ W.shell.shortcuts(); }},"Keyboard shortcuts",h("kbd","?"))),
 h("div.set-help","Offline-first single file. Everything lives in your browser + your private Gist."),

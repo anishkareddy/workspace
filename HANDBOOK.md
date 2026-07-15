@@ -29,6 +29,23 @@ A private workspace for a VC investor (UK VCT, invests at Series A/B):
   cap; "Save to Notes" files a read permanently into Notes → Reference.
 - **Assistant** — in-app Claude chat (optional; user's own API key, never synced)
 
+### Dossiers (v9.6): read/edit vs create
+
+Outreach and Deal Radar follow a two-surface pattern:
+
+- **Forms create** — "New deal" / "Add contact" / "Log meeting" open the classic field modals.
+  Row **pencil** buttons and the dossier's "Edit fields" button reopen them (escape hatch).
+- **Dossiers read & edit** — clicking any row (radar deal, contact, meeting, This-week item,
+  palette jump) opens a `modal.dossier`: big serif title, one-click **status chips**, a facts
+  grid (dates/links), and full-width sections rendered through mdLite. Every section is
+  **inline-editable**: click text → auto-sizing textarea → Enter/⌘Enter or blur saves,
+  Escape reverts (and never closes the modal). Deal dossiers have **←/→ prev-next** over the
+  current filter (keys ignored while typing) and a Watch toggle; contact dossiers embed the
+  derived deals list + meetings timeline (per-meeting Affinity copy, chevron into the meeting
+  dossier, prefilled "Log meeting"); meeting dossiers show shared/received deal columns and a
+  prominent "Copy for Affinity". Editing a deal's "why" preserves its trailing `[nexus]` tag.
+  Shared components live in UIKIT as `W.de` (edit/chips/sec/fact/date).
+
 ## Architecture
 
 - **One file.** All CSS/JS modules inline in `index.html` (~500 KB). Deploy = replace the file in this repo
@@ -132,6 +149,15 @@ knowledge-intensive); first risk-finance within ~7 yrs of first commercial sale 
 Applied loosely at radar stage — every deal's "why" ends with `[HQ London]` / `[Berlin HQ; UK office]` /
 `[no UK nexus yet — watch]` style tags.
 
+## Storage: images are the only real risk
+
+Pasted images live as data-URLs inside page HTML — measured in the wild, two screenshot-heavy pages
+held >1 MB of a 1.6 MB state. Mitigations (v9.5): paste-time downscale tightened (≤1200px, q0.8);
+Settings → Data → **"Slim images"** re-compresses every embedded image (≤1100px, q0.72, skips
+<60 KB images and anything that doesn't shrink ≥10%); a one-time warning toast fires when state
+crosses 2.5 MB. `pull()` already handles Gist truncation (>1 MB files read via raw_url).
+Assistant chats cap at 40 live (migrate tombstones the oldest).
+
 ## Scale guardrails (measured)
 
 Six months of heavy use (≈350 deals + 60 pulses + 25 theses) ≈ **105 KB** of state — ~2% of the
@@ -146,7 +172,10 @@ prefer links/covers for heavy media.
 2. jsdom suites (polyfill `matchMedia`, `ResizeObserver`, stub `fetch`, `runScripts:"dangerously"`):
    boot/seed, applyCommand types + dedupe, inbox, merge/prune, undo/redo, callout/code Enter+paste,
    tables, reorder, outreach fields, xlsx (unzip + openpyxl), radar (deals/pulse/thesis/trends math),
-   volume stress. Editor selection APIs work in jsdom; `execCommand` does not (fallback paths cover it).
+   dossiers (open from every row type, inline edit save/Escape, chips, prev/next keys, Affinity copy,
+   nexus-tag preservation, Edit-fields escape hatch), volume stress. Editor selection APIs work in
+   jsdom; `execCommand` does not (fallback paths cover it). NOTE: row click now opens the dossier —
+   tests that need the form modal must click the row's pencil (`button[aria-label="Edit …"]`).
 3. After deploy: hard-refresh every device (each browser caches the old file).
 
 ## Handover ritual for a new chat/session
