@@ -48,12 +48,44 @@ Outreach and Deal Radar follow a two-surface pattern:
 
 ## Architecture
 
-- **One file.** All CSS/JS modules inline in `index.html` (~500 KB). Deploy = replace the file in this repo
+- **One file.** All CSS/JS modules inline in `index.html` (~540 KB). Deploy = replace the file in this repo
   (drag-drop upload on github.com → commit) → GitHub Pages updates → hard-refresh devices (⌘⇧R).
 - **Modules** (in order): CORE (state/sync/inbox engine) → UIKIT (h(), popovers, modals, menus) →
   XLSX (dependency-free .xlsx writer) → THEME/STORE → SHELL (nav) → PALETTE (⌘K) → views
   (WEEK, NOTES incl. editor, OUTREACH, RADAR, ASSISTANT, SETTINGS) → BOARD engine → boot.
 - **No build step, no dependencies, ES5-style code.** Test rig: jsdom (see Testing).
+
+### v10 "Atelier" design system (visual layer only — zero behavioural change)
+
+The v10 redesign rebuilt the CSS foundations to Apple-grade materials while keeping every
+selector, aria-label and API stable. Know these before touching styles:
+
+- **Tokens** (`:root` + `[data-theme=dark]`): glass recipes `--glass-chrome/panel/overlay` +
+  `--glass-blur(-lg)`; top-edge highlights `--hl`, `--hl-soft` (the "lit from above" tell, used
+  as `inset 0 1px 0`); elevated overlay surface `--bg-elevated` (lighter than surfaces in dark);
+  5-step shadow ramp `--shadow-xs…xl` with legacy aliases (`--shadow-card`,
+  `--shadow-card-hover`, `--shadow-popover`, `--shadow-modal`) that all views still read;
+  radii scale r-xs 5 → r-xl 18 (modals 18, cards 12, controls 8); easings add `--ease-spring`
+  (subtle overshoot) and `--ease-glide`. Serif stack leads with Iowan Old Style (macOS-shipped;
+  NO external fonts — offline integrity). Version marker: `<html data-app="10.0">` (used for
+  live-deploy verification) + the About card string.
+- **Glass surfaces** (backdrop-filter budget — keep bounded): sidebar rail gradient, view
+  headers, editor/board toolbars, sticky table headers (`.ot-hd`, `.rd-hd`), palette, modals,
+  popovers, toasts, tabbar, assistant composer. Never put filters on rows.
+- **Segmented control** (`W.segmented`, UIKIT): same API; now renders a decorative
+  `span.seg-thumb` that slides via transform (positioned with offsetLeft/Width on rAF + click).
+  When unmeasured (jsdom, first paint) the `.seg` lacks `[data-thumb]` and a CSS fallback paints
+  the pressed button directly — aria-pressed remains the truth, tests unaffected.
+- **Sidebar indicator** (SHELL): `span.sb-ind` inside `.sb-nav`; `updateNav()` positions it via
+  `--ind-y` and sets `[data-ind]`; without measurement (jsdom) the static `.sb-item.active`
+  fallback rule applies.
+- **Staggered entrance** (SHELL render): `#view` gets `.view-enter` for 600 ms ONLY when the
+  view actually changes (never on same-view re-renders — protects editor/typing paths); CSS
+  `rise-in` rules are all scoped under `#view.view-enter`. Reduced-motion kills them.
+- **Week large-title condensation**: pure-CSS scroll-driven (`animation-timeline: scroll()`)
+  behind `@supports` — Chrome-only enhancement, inert elsewhere and in jsdom.
+- Embedded inputs inside composite fields (palette head, rd-search, composer, cmp-box, ai-row)
+  explicitly kill their own focus box-shadow — the container carries the ring.
 
 ## Data & sync model
 
@@ -176,7 +208,15 @@ prefer links/covers for heavy media.
    nexus-tag preservation, Edit-fields escape hatch), volume stress. Editor selection APIs work in
    jsdom; `execCommand` does not (fallback paths cover it). NOTE: row click now opens the dossier —
    tests that need the form modal must click the row's pencil (`button[aria-label="Edit …"]`).
-3. After deploy: hard-refresh every device (each browser caches the old file).
+   v10 additions: version markers (`data-app`), token completeness both themes, legacy shadow
+   aliases, seg-thumb decorative + aria truth, `.sb-ind` presence + static fallback rule,
+   `rise-in` scoped only under `#view.view-enter`, contrast spot-checks on token hexes.
+   Dossier deal-navigation arrow keys are bound to the modal box, not document — dispatch there.
+   Deal dedupe enriches EMPTY fields only; processedInbox ids are recorded by processInbox (the
+   inbox.json path), not by direct applyCommand calls.
+3. Real-browser visual pass when the sandbox allows: headless Chromium (playwright-core +
+   `/opt/pw-browsers` binary) — screenshot every view light+dark+mobile and review.
+4. After deploy: hard-refresh every device (each browser caches the old file).
 
 ## Handover ritual for a new chat/session
 
