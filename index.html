@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light" data-rail="study" data-app="10.0">
+<html lang="en" data-theme="light" data-rail="study" data-app="10.1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -2091,7 +2091,10 @@ var nb=state.notes.notebooks.filter(function(x){return !x.deleted;})[0];
 if(!nb){ nb={id:C.uid(),name:cmd.notebook||"Work",updated:C.now(),sections:[{id:C.uid(),name:"General"}]}; state.notes.notebooks.push(nb); }
 nb.sections=nb.sections||[]; if(!nb.sections.length) nb.sections.push({id:C.uid(),name:"General"});
 var sname=cmd.section||nb.sections[0].name;
-var sec=nb.sections.filter(function(s){return s.name.toLowerCase()===String(sname).toLowerCase();})[0]||nb.sections[0];
+var sec=nb.sections.filter(function(s){return s.name.toLowerCase()===String(sname).toLowerCase();})[0];
+/* v10.1 — a named section that doesn't exist yet is created, so routine pushes land where aimed */
+if(!sec && cmd.section){ sec={id:C.uid(),name:String(cmd.section)}; nb.sections.push(sec); nb.updated=C.now(); }
+if(!sec) sec=nb.sections[0];
 var content=String(cmd.content||cmd.body||"");
 var html=bodyToHtml(content)||"<p><br></p>";
 state.notes.pages.push({ id:C.uid(), notebookId:nb.id, sectionId:sec.id, title:ttl, tags:Array.isArray(cmd.tags)?cmd.tags:[], html:html, created:C.now(), updated:C.now() });
@@ -2336,6 +2339,139 @@ pull();
 window.addEventListener("focus",focusPull);
 document.addEventListener("visibilitychange",focusPull);
 try{ if(location.protocol==="https:" && "serviceWorker" in navigator){ window.addEventListener("load",function(){ navigator.serviceWorker.register("./sw.js").catch(function(){}); }); } }catch(e){}
+/* v10.1 — the archive compiles itself: auto-rollup of last month once material exists */
+setTimeout(function(){ try{ autoRollup(); }catch(e){} },2600);
+}
+
+/* ---- v10.1 MONTHLY REVIEWS — durable rollups; pulses/reads rotate, these pages don't ---- */
+function ymOf(s){ return String(s||"").slice(0,7); }
+function monthLabel(ym){
+var p=String(ym||"").split("-");
+var names=["January","February","March","April","May","June","July","August","September","October","November","December"];
+return (names[(+p[1]||1)-1]||"")+" "+(p[0]||"");
+}
+function rollupTitle(ym){ return monthLabel(ym)+" — in review"; }
+function stripHtml(html){
+return String(html||"").replace(/<style[\s\S]*?<\/style>/gi," ").replace(/<[^>]*>/g," ")
+.replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/\s+/g," ").trim();
+}
+function monthMaterial(ym){
+function live(a){ return (a||[]).filter(function(x){ return !x.deleted; }); }
+var y=+String(ym).slice(0,4), mo=+String(ym).slice(5,7);
+var start=new Date(y,mo-1,1).getTime(), end=new Date(y,mo,1).getTime();
+function byDate(a,b){ return String(a.date||a.announced||"").localeCompare(String(b.date||b.announced||"")); }
+var deals=live((state.radar||{}).deals).filter(function(d){ return ymOf(d.announced)===ym; }).sort(byDate);
+var pulses=live((state.radar||{}).pulses).filter(function(p){ return ymOf(p.date)===ym; }).sort(byDate);
+var reads=live(((state.reads||{}).items)).filter(function(r){ return ymOf(r.date)===ym; }).sort(byDate);
+var thNew=live((state.radar||{}).theses).filter(function(t){ return ymOf(t.date)===ym; });
+var thTouched=live((state.radar||{}).theses).filter(function(t){ return ymOf(t.date)!==ym && (t.updated||0)>=start && (t.updated||0)<end; });
+return { ym:ym, deals:deals, pulses:pulses, reads:reads, thesesNew:thNew, thesesTouched:thTouched,
+any:!!(deals.length||pulses.length||reads.length) };
+}
+function findRollup(ym){
+var tt=rollupTitle(ym).toLowerCase();
+return state.notes.pages.filter(function(p){ return !p.deleted && String(p.title||"").toLowerCase()===tt; })[0]||null;
+}
+function ensureSection(nb,name){
+nb.sections=nb.sections||[];
+var s=nb.sections.filter(function(x){ return String(x.name||"").toLowerCase()===String(name).toLowerCase(); })[0];
+if(!s){ s={id:C.uid(),name:String(name)}; nb.sections.push(s); nb.updated=C.now(); }
+return s;
+}
+function rollupRecord(ym,m){
+var E=CORE.esc||function(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); };
+var out=[];
+out.push("<p><i>Compiled "+E(localISO(new Date()))+" — the durable record of "+E(monthLabel(ym))+". Pulses and reads rotate out of the app after a while; this page doesn't.</i></p>");
+if(m.deals.length){
+out.push("<h3>Deals on the radar ("+m.deals.length+")</h3>");
+var rows=["<tr><th>Company</th><th>Sector</th><th>Round · Amount</th><th>Investors</th><th>Status</th></tr>"];
+m.deals.forEach(function(d){
+rows.push("<tr><td><b>"+E(d.company)+"</b></td><td>"+E(d.sector||"—")+"</td><td>"+E((d.round||"—")+(d.amount?" · "+d.amount:""))+"</td><td>"+E(d.investors||"—")+"</td><td>"+E(d.status||"New")+"</td></tr>");
+});
+out.push("<table><tbody>"+rows.join("")+"</tbody></table>");
+var mattered=m.deals.filter(function(d){ return ["Watching","Met","Tracked"].indexOf(d.status)>=0 || d.round==="Growth"; });
+if(mattered.length){
+out.push("<h4>The ones that mattered</h4><ul>"+mattered.map(function(d){
+return "<li><b>"+E(d.company)+"</b>"+(d.why?" — "+E(stripHtml(d.why)):"")+"</li>";
+}).join("")+"</ul>");
+}
+}
+if(m.pulses.length){
+out.push("<h3>Market pulses ("+m.pulses.length+")</h3>");
+m.pulses.forEach(function(p){
+var t=stripHtml(p.html);
+out.push("<h4>"+E(p.title)+(p.date?" · "+E(p.date):"")+"</h4><p>"+E(t.length>1600?t.slice(0,1600)+"…":t)+"</p>");
+});
+}
+if(m.reads.length){
+out.push("<h3>Deep reads ("+m.reads.length+")</h3><ul>"+m.reads.map(function(r){
+var t=stripHtml(r.html);
+return "<li><b>"+E(r.title)+"</b> — "+E(r.kind==="deepdive"?"deep dive":"briefing")+(r.date?" · "+E(r.date):"")+(t?"<br>"+E(t.length>260?t.slice(0,260)+"…":t):"")+"</li>";
+}).join("")+"</ul>");
+}
+if(m.thesesNew.length||m.thesesTouched.length){
+out.push("<h3>Theses</h3><ul>"+
+m.thesesNew.map(function(t){ return "<li><b>New:</b> "+((CORE.esc||String)(t.title))+((t.tags||[]).indexOf("core")>=0?" (core)":"")+"</li>"; }).join("")+
+m.thesesTouched.map(function(t){ return "<li>Updated: "+((CORE.esc||String)(t.title))+"</li>"; }).join("")+"</ul>");
+}
+return out.join("");
+}
+function rollupAIMaterial(ym,m){
+var L=[];
+L.push("MONTH: "+monthLabel(ym));
+L.push("\nDEALS ("+m.deals.length+"):");
+m.deals.forEach(function(d){ L.push("- "+d.company+" — "+(d.sector||"")+" "+(d.round||"")+(d.amount?" "+d.amount:"")+(d.investors?" ("+d.investors+")":"")+" [status: "+(d.status||"New")+"]"+(d.why?" — "+stripHtml(d.why):"")); });
+L.push("\nMARKET PULSES ("+m.pulses.length+") — the twice-weekly diary:");
+m.pulses.forEach(function(p){ var t=stripHtml(p.html); L.push("## "+p.title+" ("+(p.date||"")+")\n"+(t.length>2000?t.slice(0,2000)+"…":t)); });
+L.push("\nDEEP READS ("+m.reads.length+"):");
+m.reads.forEach(function(r){ var t=stripHtml(r.html); L.push("- "+r.title+" ["+(r.kind||"briefing")+", "+(r.date||"")+"] "+(t.length>350?t.slice(0,350)+"…":t)); });
+if(m.thesesNew.length) L.push("\nNEW THESES: "+m.thesesNew.map(function(t){return t.title;}).join(" · "));
+if(m.thesesTouched.length) L.push("UPDATED THESES: "+m.thesesTouched.map(function(t){return t.title;}).join(" · "));
+return L.join("\n");
+}
+function compileMonth(ym,opts){
+opts=opts||{};
+var m=monthMaterial(ym);
+if(!m.any) return Promise.resolve({empty:true,ym:ym});
+if(findRollup(ym) && !opts.force && !opts.ai) return Promise.resolve({existed:true,page:findRollup(ym),ym:ym});
+var record=rollupRecord(ym,m);
+function finish(html,usedAI){
+var nb=state.notes.notebooks.filter(function(x){return !x.deleted;})[0];
+if(!nb){ nb={id:C.uid(),name:"Work",updated:C.now(),sections:[{id:C.uid(),name:"General"}]}; state.notes.notebooks.push(nb); }
+var sec=ensureSection(nb,"Reviews");
+var page=findRollup(ym);
+if(page){ page.html=html; page.tags=["review",ym]; page.updated=C.now(); }
+else{ page={ id:C.uid(), notebookId:nb.id, sectionId:sec.id, title:rollupTitle(ym), tags:["review",ym], html:html, created:C.now(), updated:C.now() }; state.notes.pages.push(page); }
+persistLocal(); pushSoon(); rerender();
+return {page:page, ai:!!usedAI, ym:ym};
+}
+if(opts.ai && haveAI()){
+var sys="You are the monthly-review editor for Anishka, an Investment Analyst at Octopus Ventures (UK VCT — enters at Series A/B, radar tracks UK+EU pre-seed/seed fintech and AI). Write in British English. Concise and opinionated; no hedging, no padding; investor language natural.";
+var ask="Write \""+monthLabel(ym)+" in review\" from the material below. Markdown only (### headings, - bullets, **bold**). Sections, skipping any that would be empty: ### The month in three moves (2–4 bullets — the themes that actually mattered and why); ### Thesis evolution (only theses with real movement — strengthened, weakened, or newly minted); ### Deals that mattered (3–6, one sharp line each on why they'll matter in six months); ### Watch next month (2–4 concrete signals worth tracking). Maximum 650 words.\n\n"+rollupAIMaterial(ym,m);
+return callClaude([{role:"user",content:ask}],{system:sys,max_tokens:1600})
+.then(function(essay){ return finish(mdLiteCore(essay)+"<hr>"+record,true); })
+.catch(function(e){ toast("AI rewrite failed — structural review kept ("+(e&&e.message||"error")+")",true); return finish(record,false); });
+}
+return Promise.resolve(finish(record,false));
+}
+function openRollup(page){
+try{
+ui.notesSel={nb:page.notebookId,sec:page.sectionId,page:page.id};
+if(W.store) W.store.saveUI();
+if(W.shell) W.shell.nav("notes");
+if(W.views&&W.views.notes&&W.views.notes.reveal) W.views.notes.reveal(page.id);
+}catch(e){}
+}
+function autoRollup(){
+var d=new Date(), prev=new Date(d.getFullYear(),d.getMonth()-1,1);
+var ym=prev.getFullYear()+"-"+pad(prev.getMonth()+1);
+if(findRollup(ym)) return;
+var m=monthMaterial(ym);
+if(!m.any) return;
+compileMonth(ym,{}).then(function(res){
+if(!res||!res.page) return;
+if(W.toast) W.toast(monthLabel(ym)+" in review compiled → Notes · Reviews",{duration:9000,undoLabel:"Open",undo:function(){ openRollup(res.page); }});
+});
 }
 
 /* ---- exports ---- */
@@ -2348,6 +2484,7 @@ loadLocal:loadLocal, loadSettings:loadSettings, persistLocal:persistLocal, persi
 save:save, touch:touch, setSync:setSync, pull:pull, push:push, pushSoon:pushSoon, applyRemote:applyRemote,
 syncNow:syncNow, createGist:createGist, haveAI:haveAI, callClaude:callClaude, workspaceContext:workspaceContext,
 applyCommand:applyCommand, processInbox:processInbox, cleanStyle:cleanStyle, cleanPaste:cleanPaste, normalizeWeights:normalizeWeights, downscale:downscale, slimImages:slimImages,
+monthMaterial:monthMaterial, compileMonth:compileMonth, autoRollup:autoRollup, findRollup:findRollup, rollupTitle:rollupTitle, monthLabel:monthLabel, openRollup:openRollup,
 boot:boot, LS_STATE:LS_STATE, LS_SET:LS_SET, GIST_FILE:GIST_FILE
 };
 W.core=CORE; W.eng=ENG; W.ui=ui;
@@ -8224,12 +8361,36 @@ else nw.appendChild(h("div.tr-none","No overlaps yet — as deals and contacts g
 box.appendChild(mo); box.appendChild(ti); box.appendChild(md); box.appendChild(nw);
 return box;
 }
+/* v10.1 — monthly review compiler (the durable archive; auto-runs at month end, manual here) */
+function ymShift(off){
+var d=new Date(), t=new Date(d.getFullYear(),d.getMonth()+off,1);
+function p2(n){ return (n<10?"0":"")+n; }
+return t.getFullYear()+"-"+p2(t.getMonth()+1);
+}
+function doCompile(ym,opts){
+W.toast("Compiling "+ENG.monthLabel(ym)+"…");
+ENG.compileMonth(ym,opts).then(function(res){
+if(res.empty){ W.toast("Nothing recorded for "+ENG.monthLabel(ym)+" yet",true); return; }
+W.toast(ENG.monthLabel(ym)+" in review "+(res.ai?"rewritten with AI":"compiled")+" ✓",
+{duration:8000,undoLabel:"Open",undo:function(){ ENG.openRollup(res.page); }});
+});
+}
+function openCompileMenu(anchor){
+var prev=ymShift(-1), cur=ymShift(0);
+var prevDone=!!ENG.findRollup(prev);
+var items=[{label:(prevDone?"Recompile ":"Compile ")+ENG.monthLabel(prev),ic:"book",run:function(){ doCompile(prev,{force:true}); }}];
+if(ENG.haveAI()) items.push({label:"Rewrite "+ENG.monthLabel(prev)+" with AI",ic:"sparkle",run:function(){ doCompile(prev,{ai:true,force:true}); }});
+items.push({label:ENG.monthLabel(cur)+" so far",ic:"calendar",run:function(){ doCompile(cur,{force:true}); }});
+W.openPop(anchor,h("div",W.menu(items)),{place:"bottom-end"});
+}
 function renderPulse(inner){
 inner.appendChild(trendBoard());
 var list=pulses().slice().sort(function(a,b){ return String(b.date||"").localeCompare(String(a.date||"")) || (b.created||0)-(a.created||0); });
 var headRow=h("div.pl-head",
 h("div.sw-lbl",{style:"padding:0"},"Pulse notes — one per scan, your market diary"),
-h("button.btn.btn-ghost.btn-sm",{type:"button",onclick:function(){ openPulseModal(null); }},icon("plus",14),"Add note"));
+h("div",{style:"display:flex;gap:6px;align-items:center"},
+h("button.btn.btn-ghost.btn-sm",{type:"button","data-tip":"Roll the month up into a durable Notes page",onclick:function(e){ openCompileMenu(e.currentTarget); }},icon("book",14),"Compile month"),
+h("button.btn.btn-ghost.btn-sm",{type:"button",onclick:function(){ openPulseModal(null); }},icon("plus",14),"Add note")));
 inner.appendChild(headRow);
 if(!list.length){
 inner.appendChild(h("div.empty",{style:"margin-top:20px"},
@@ -9421,7 +9582,7 @@ p.foot.appendChild(go);
 }
 function aboutCard(){
 return card("info","About",[
-h("div.set-about-row",h("span.v","Workspace v10.0"),h("span.t3","·"),h("span","Atelier · Dossiers · Radar · Reads")),
+h("div.set-about-row",h("span.v","Workspace v10.1"),h("span.t3","·"),h("span","Atelier · Monthly reviews · Dossiers")),
 h("div.set-row",
 h("button.set-link",{type:"button",onclick:function(){ W.shell.shortcuts(); }},"Keyboard shortcuts",h("kbd","?"))),
 h("div.set-help","Offline-first single file. Everything lives in your browser + your private Gist."),

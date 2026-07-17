@@ -181,6 +181,28 @@ knowledge-intensive); first risk-finance within ~7 yrs of first commercial sale 
 Applied loosely at radar stage — every deal's "why" ends with `[HQ London]` / `[Berlin HQ; UK office]` /
 `[no UK nexus yet — watch]` style tags.
 
+## Monthly reviews (v10.1) — the archive compiles itself
+
+Pulses cap at 60 live and reads at 30 unpinned, so the raw archive rotates. v10.1 makes the
+durable record automatic: once a month has any pulses/reads/deals, the app compiles
+"**<Month> <Year> — in review**" into **Notes → Reviews** (section auto-created; notes pages
+are never capped, so these survive forever and are ⌘K-searchable).
+
+- **Auto**: on boot, if last month has material and no review page exists, it compiles the
+  structural record silently (deals table + "the ones that mattered" with nexus tags +
+  condensed pulses + reads index + thesis movements) and toasts with an Open action.
+  Idempotent — dedupes by title, never touches an existing page.
+- **Manual**: Deal Radar → Market pulse → **Compile month** (recompile last month · this
+  month so far · "Rewrite with AI" when an Assistant API key is set — Claude writes the
+  editorial synthesis in British English: themes, thesis evolution, deals that mattered,
+  watch-next-month; the structural record is appended below an `<hr>`). AI failure falls
+  back to structural, never loses the page.
+- Engine in CORE: `monthMaterial(ym)`, `compileMonth(ym,{ai,force})`, `autoRollup()`,
+  `findRollup(ym)`, `rollupTitle(ym)`, `openRollup(page)` — all on `ENG`. Manual compile
+  REPLACES page content (generated page — hand-edits belong elsewhere); auto never recompiles.
+- `applyCommand` `note` now auto-creates a named section that doesn't exist yet (routine
+  pushes land where aimed).
+
 ## Storage: images are the only real risk
 
 Pasted images live as data-URLs inside page HTML — measured in the wild, two screenshot-heavy pages
